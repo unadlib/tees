@@ -1,6 +1,6 @@
 {
   "name": "tees",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Universal test framework for front-end",
   "main": "index.js",
   "scripts": {
