@@ -64,6 +64,7 @@ const setup = async () => {
 };
 
 const teardown = async () => {
+  // TODO fix globalTeardown.
   const { globals } = getConfig(process);
   try {
     const teardownPath = resolve(process.cwd(), globals.execGlobal.globalTeardown);
@@ -71,8 +72,8 @@ const teardown = async () => {
     const globalTeardown = require(teardownPath);
     if (typeof globalTeardown === 'function') globalTeardown();
   } catch (e) {
-    console.warn('unexpected `globalSetup` hooks.');
-    console.warn(e);
+    // console.warn('unexpected `globalSetup` hooks.');
+    // console.warn(e);
   }
   // TODO Handle accident exit and close drivers
 };

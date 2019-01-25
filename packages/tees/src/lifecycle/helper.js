@@ -179,30 +179,26 @@ const types = [
   'screenshot'
 ];
 const originalInfoLog = global.console.info;
-/**
- * Unique for distinguish case
- * @param {sting} caseTitle 
- */
-export const generateLogger = (caseTitle, hasReporter) => types.reduce(
-  (logger, type) => {
-    /**
-     * @param {sting} info 
-     */
-    logger[type] = (info) => {
-      if (!hasReporter) return;
-      const formatInfo = {
-        type,
-        info,
-        caseTitle,
-        time: Date.now(),
-        reporterLogger: true,
-      };
-      originalInfoLog(JSON.stringify(formatInfo));
-    }
-    return logger;
-  },
-  {}
-);
+
+function generateLogger(caseTitle, hasReporter) {
+  return types.reduce(
+    (logger, type) => {
+      logger[type] = (info) => {
+        if (!hasReporter) return;
+        const formatInfo = {
+          type,
+          info,
+          caseTitle,
+          time: Date.now(),
+          reporterLogger: true,
+        };
+        originalInfoLog(JSON.stringify(formatInfo));
+      }
+      return logger;
+    },
+    {}
+  )
+};
 
 module.exports = {
   mergeTags,
