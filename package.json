@@ -1,11 +1,19 @@
 {
   "name": "tees",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "description": "Universal test framework for front-end",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "npx git-cz"
   },
+  "private": true,
+  "devEngines": {
+    "node": "8.x || 9.x"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/unadlib/tees.git"
@@ -22,6 +30,7 @@
   },
   "homepage": "https://github.com/unadlib/tees#readme",
   "devDependencies": {
+    "commitizen": "^3.0.5",
     "lerna": "^2.11.0"
   }
 }
