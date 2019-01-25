@@ -1,0 +1,27 @@
+{
+  "name": "tees",
+  "version": "1.0.0",
+  "description": "Universal test framework for front-end",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unadlib/tees.git"
+  },
+  "keywords": [
+    "e2e",
+    "test",
+    "test framework"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unadlib/tees/issues"
+  },
+  "homepage": "https://github.com/unadlib/tees#readme",
+  "devDependencies": {
+    "lerna": "^2.11.0"
+  }
+}

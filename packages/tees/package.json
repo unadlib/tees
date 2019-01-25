@@ -1,0 +1,32 @@
+{
+  "name": "tees",
+  "version": "1.0.0-alpha.1",
+  "description": "Universal test framework for front-end",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unadlib/tees.git"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "tees": "bin/tees.js"
+  },
+  "keywords": [
+    "e2e",
+    "test",
+    "test framework"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "jest": "^23.6.0"
+  },
+  "dependencies": {
+    "commander": "^2.17.1",
+    "jest": "^23.6.0",
+    "jest-circus": "^23.6.0",
+    "tees-environment": "^0.0.1"
+  }
+}

@@ -1,0 +1,174 @@
+const uuid = require('uuid');
+const RPClient = require('reportportal-client');
+const statusMap = require('../constants/status');
+const { filterSkipTest, formatConsole, promiseReadfile } = require('./helper');
+
+class processor {
+  constructor(options) {
+    const {
+      token, endpoint, project, launch
+    } = options;
+    this._options = options;
+    this._client = new RPClient({
+      token,
+      endpoint,
+      launch,
+      project,
+    });
+    this._initCheck();
+  }
+
+  _initCheck() {
+    this._client.checkConnect().then((response) => {
+      console.log('You have successfully connected to the server.');
+      console.log(`You are using an account: ${response.full_name}`);
+    }, (error) => {
+      const redText = '\x1b[31m%s\x1b[0m';
+      console.error(redText, '【Reporter_Fail】: Error connection to server');
+      console.dir(error);
+      this._resetClient();
+    });
+  }
+
+  _resetClient() {
+    const EmpteFunc = () => {};
+    Object.keys(this._client)
+      .filter(key => typeof this._client[key] === 'function')
+      .forEach((key) => { this._client[key] = EmpteFunc; });
+  }
+
+  startLaunch() {
+    const { tags = '', launchname } = this._options;
+
+    this._launchObj = this._client.startLaunch({
+      name: launchname,
+      start_time: this._client.helpers.now(),
+      description: '**E2E TEST REPORTER**',
+      tags: tags.split(','),
+    });
+  }
+
+  startTestSuiteItem({
+    name,
+    startTime = this._client.helpers.now(),
+  }) {
+    const { appDirectory } = this._options;
+    const path = name.replace(appDirectory, '');
+    return this._client.startTestItem({
+      name: path,
+      start_time: startTime,
+      type: 'SUITE',
+    }, this._launchObj.tempId);
+  }
+
+  async logTestsItems({
+    suiteTempId,
+    tests = [],
+    loggerInfo
+  }) {
+    return Promise.all(
+      tests
+      .filter(filterSkipTest)
+      .map(async (test) => {
+        const {
+          ancestorTitles,
+          duration,
+          failureMessages,
+          fullName,
+          location,
+          numPassingAsserts,
+          status,
+          title,
+        } = test;
+
+        const logArray = loggerInfo[title] || [];
+        const calcTime = this._client.helpers.now() - duration;
+        const time = logArray[0] && logArray[0].time;
+        const start_time = time ? Math.min(calcTime, time) - 1000 : calcTime;
+
+        const testObj = this._client.startTestItem({
+          name: title,
+          type: 'TEST',
+          description: fullName,
+          start_time,
+        }, this._launchObj.tempId, suiteTempId);
+        await Promise.all(logArray.map(async (logItem) => {
+          if (logItem.type === 'screenshot') {
+            const fileData = await promiseReadfile(logItem.info);
+            return this._client.sendLog(testObj.tempId, {
+              message: `screenshot`,
+              level: 'trace',
+              time: logItem.time
+            }, {
+              name: uuid.v4(),
+              type: 'image/png',
+              content: fileData,
+            });
+          }
+          return this._client.sendLog(testObj.tempId, {
+            message: logItem.info,
+            level: logItem.type,
+            time: logItem.time
+          });
+        }))
+        if (status !== 'passed') {
+          this._client.sendLog(testObj.tempId, {
+            message: failureMessages.join('\n'),
+            status: 'error'
+          });
+        }
+        return this._client.finishTestItem(testObj.tempId, {
+          status: statusMap[status] || 'passed'
+        });
+      })
+    )
+  }
+
+  async finishTestSuiteItem({
+    tempId,
+    testResult
+  }) {
+    const {
+      console,
+      failureMessage,
+      numFailingTests,
+      numPassingTests,
+      numPendingTests,
+      perfStats,
+      snapshot,
+      testFilePath,
+      testResults,
+      coverage,
+      sourceMaps,
+      skipped,
+      displayName,
+      leaks,
+      testExecError,
+    } = testResult;
+    const consoleInfo = testResult.console;
+
+    await this.logTestsItems({
+      suiteTempId: tempId,
+      tests: testResults,
+      loggerInfo: formatConsole(consoleInfo),
+    });
+    if (failureMessage || testExecError) {
+      this._client.sendLog(tempId, {
+        message: `${failureMessage}\n${testExecError}`,
+        status: 'trace'
+      });
+    }
+
+    return this._client.finishTestItem(tempId);
+  }
+
+  finishLaunch() {
+    const launchFinishObj = this._client.finishLaunch(this._launchObj.tempId, {
+      end_time: this._client.helpers.now(),
+    });
+    return launchFinishObj.promise;
+  }
+}
+
+
+module.exports = processor;
