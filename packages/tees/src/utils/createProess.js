@@ -6,10 +6,10 @@ const DEAULT_PROCESS_OPTIONS = {
   cwd: process.cwd()
 };
 const DEAULT_PROCESS_EXIT = (code, signal) => {
-  console.log(signal, 'exit');
+  // console.log(signal, 'exit');
 };
 const DEAULT_PROCESS_CLOSE = (code, signal) => {
-  console.log(signal, 'close');
+  // console.log(signal, 'close');
 };
 const DEAULT_PROCESS_START = () => {};
 

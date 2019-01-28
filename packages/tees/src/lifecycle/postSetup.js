@@ -85,7 +85,8 @@ function execCase({
     keys: Object.keys(templateMappding),
     values: Object.values(templateMappding),
   });
-  const tail = ` => (${project} in ${group.join(' & ')} on ${driver})`;
+  const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
+  const tail = ` => (${project} ${groupInfos}on ${driver})`;
   const caseTitle = `${name}${tail}`;
   const {
     config,
@@ -198,14 +199,13 @@ function testCase(caseParams, fn, isOnly = false) {
   const isVerbose = _modes.indexOf('verbose') > -1;
   for (const driver of global.execDrivers) {
     for (const [project, { drivers, ...tags }] of execTags) {
-      const groups = flattenTags(tags);
+      const groups = Object.keys(tags).length === 0 ? [[]] : flattenTags(tags);
       for (const group of groups) {
         for (const option of options) {
           const tag = restoreTags(group, project);
           const caseTag = testCaseTags.find(([_project]) => _project === project);
           const isSkipped = checkSkippedCase({ ...tag, drivers: driver }, caseTag);
           if (isSkipped) {
-            // _test.skip('skip case', () => {});
             break;
           }
           execCase({

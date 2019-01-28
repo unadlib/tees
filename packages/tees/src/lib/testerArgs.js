@@ -91,6 +91,9 @@ function getGlobals({
   retryTimes,
   reporter,
 }, execGlobal) {
+  if (!config.params.projects) {
+    throw new Error('`projects` property in `e2e.config.js` must be set projects info.');
+  }
   const defaultTags = Object.keys(config.params.projects).map(project => [project]);
   const execTags = getExecTags(defaultTags, execGlobal.exec, params);
   const execModes = getExecModes(defaultsConfig, execGlobal.exec, modes);

@@ -52,6 +52,7 @@ const createDriver = (name, inputSetting = {}) => {
 const setup = async () => {
   const { globals } = getConfig(process);
   checkValidBrowsers(process);
+  if (!globals.execGlobal.globalSetup) return;
   try {
     const setupPath = resolve(process.cwd(), globals.execGlobal.globalSetup);
     // eslint-disable-next-line
@@ -66,6 +67,7 @@ const setup = async () => {
 const teardown = async () => {
   // TODO fix globalTeardown.
   const { globals } = getConfig(process);
+  if (!globals.execGlobal.globalTeardown) return;
   try {
     const teardownPath = resolve(process.cwd(), globals.execGlobal.globalTeardown);
     // eslint-disable-next-line

@@ -28,10 +28,10 @@ function testPrepare({
     driver,
     isSandbox,
   });
-  const config = lookupConfig({
+  const config = typeof lookupConfig === 'function' ? lookupConfig({
     config: global.execGlobal,
     tag,
-  });
+  }) : {};
   return {
     instance,
     config,
