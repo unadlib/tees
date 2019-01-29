@@ -28,8 +28,7 @@ class Query extends BaseQuery {
     return allpages[allpages.length - 1];
   }
 
-  async clickToGetNewOpenPage(selector, options = {}) {
-    const browser = this._node.browser();
+  async clickToGetNewOpenPage(selector, browser, options = {}) {
     const openEventPage = new Promise((resolve) => {
       browser.on('targetchanged', async (target) => {
         resolve(target.page());
