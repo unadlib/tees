@@ -164,7 +164,7 @@ class Driver extends BaseDriver {
     super(options, program);
   }
 
-  async run({ type, extension = '', isHeadless } = {}) {
+  async run({ type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
     this._isHeadless = isHeadless;
     const isExtension = type === 'extension';
     const extensionPath = path.resolve(process.cwd(), extension);
@@ -179,6 +179,8 @@ class Driver extends BaseDriver {
     this._browser = await this._program.launch({
       ...setting,
       headless: isExtension ? false : this._isHeadless,
+      executablePath: `${executablePath}`,
+      userDataDir: `${userDataDir}`,
     });
   }
 
