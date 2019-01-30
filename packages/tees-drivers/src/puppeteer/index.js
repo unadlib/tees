@@ -164,18 +164,26 @@ class Driver extends BaseDriver {
     super(options, program);
   }
 
-  async run({ type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
+  async run({ configSetting, type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
     this._isHeadless = isHeadless;
     const isExtension = type === 'extension';
     const extensionPath = path.resolve(process.cwd(), extension);
-    const setting = isExtension ? {
+    const mergeSetting = {
       ...this._options.driver.setting,
+      ...configSetting,
       args: [
         ...this._options.driver.setting.args,
+        ...configSetting.args,
+      ],
+    }
+
+    const setting = isExtension ? {
+      ...mergeSetting,
+      args: [
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`
       ],
-    } : this._options.driver.setting;
+    } : mergeSetting;
     this._browser = await this._program.launch({
       ...setting,
       headless: isExtension ? false : this._isHeadless,
