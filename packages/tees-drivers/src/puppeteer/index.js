@@ -180,6 +180,7 @@ class Driver extends BaseDriver {
     const setting = isExtension ? {
       ...mergeSetting,
       args: [
+        ...mergeSetting.args,
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`
       ],
