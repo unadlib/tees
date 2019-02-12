@@ -12,6 +12,8 @@ const filterSkipTest =
  * @param {Arry} consoleInfo 
  */
 const formatConsole = (consoleInfo = []) => {
+  if (!consoleInfo) return {};
+
   const list = consoleInfo.map(formatInfo).filter(d => !!d);
   const titleMapInfo = {};
   list.forEach( item => {
