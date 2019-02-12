@@ -21,11 +21,13 @@ class reporter {
   }
 
   onTestResult({ path }, testResult) {
-    const tempId = this._suitesMap[path].tempId;
-    return this._processor.finishTestSuiteItem({
-      tempId,
-      testResult
-    });
+    const tempId = this._suitesMap[path] && this._suitesMap[path].tempId;
+    if (tempId) {
+      return this._processor.finishTestSuiteItem({
+        tempId,
+        testResult
+      });
+    }
   }
 
   onRunComplete(_, results) {
