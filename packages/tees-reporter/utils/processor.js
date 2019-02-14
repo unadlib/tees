@@ -42,7 +42,7 @@ class processor {
 
     this._launchObj = this._client.startLaunch({
       name: launchname,
-      start_time: this._client.helpers.now(),
+      start_time: this._client.helpers.now() - 3000,
       description: '**E2E TEST REPORTER**',
       tags: tags.split(','),
     });
@@ -56,7 +56,7 @@ class processor {
     const path = name.replace(appDirectory, '');
     return this._client.startTestItem({
       name: path,
-      start_time: startTime,
+      start_time: startTime - 2000,
       type: 'SUITE',
     }, this._launchObj.tempId);
   }
@@ -81,7 +81,7 @@ class processor {
           title,
         } = test;
 
-        const logArray = loggerInfo[title] || [];
+        const logArray = (loggerInfo[title] || []).sort((a, b) => a.time - b.time);
         const calcTime = this._client.helpers.now() - duration;
         const time = logArray[0] && logArray[0].time;
         const start_time = time ? Math.min(calcTime, time) - 1000 : calcTime;
@@ -117,8 +117,12 @@ class processor {
             level: 'error'
           });
         }
+        const timeEnd = logArray[logArray.length - 1] && logArray[logArray.length - 1].time;
+        const calcEndTime = this._client.helpers.now();
+        const end_time = timeEnd ? Math.max(this._client.helpers.now(), timeEnd) : calcEndTime;
         return this._client.finishTestItem(testObj.tempId, {
-          status: statusMap[status] || 'passed'
+          status: statusMap[status] || 'passed',
+          end_time
         });
       })
     )
@@ -159,12 +163,12 @@ class processor {
       });
     }
 
-    return this._client.finishTestItem(tempId);
+    return this._client.finishTestItem(tempId, {end_time: this._client.helpers.now() + 1000});
   }
 
   finishLaunch() {
     const launchFinishObj = this._client.finishLaunch(this._launchObj.tempId, {
-      end_time: this._client.helpers.now(),
+      end_time: this._client.helpers.now() + 2000,
     });
     return launchFinishObj.promise;
   }
