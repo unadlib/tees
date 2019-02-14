@@ -82,23 +82,20 @@ class processor {
         } = test;
 
         const logArray = (loggerInfo[title] || []).sort((a, b) => a.time - b.time);
-        const calcTime = this._client.helpers.now() - duration;
-        const time = logArray[0] && logArray[0].time;
-        const start_time = time ? Math.min(calcTime, time) - 1000 : calcTime;
+        const start_time = this._client.helpers.now() - duration;
 
         const testObj = this._client.startTestItem({
           name: title,
           type: 'TEST',
           description: fullName,
-          start_time,
+          start_time
         }, this._launchObj.tempId, suiteTempId);
         await Promise.all(logArray.map(async (logItem) => {
           if (logItem.type === 'screenshot') {
             const fileData = await promiseReadfile(logItem.info);
             return this._client.sendLog(testObj.tempId, {
-              message: `screenshot`,
+              message: `🕙【Time】: ${logItem.time}\nscreenshot`,
               level: 'trace',
-              time: logItem.time
             }, {
               name: uuid.v4(),
               type: 'image/png',
@@ -106,9 +103,8 @@ class processor {
             });
           }
           return this._client.sendLog(testObj.tempId, {
-            message: logItem.info,
+            message: `🕙【Time】: ${logItem.time}\n${logItem.info}`,
             level: logItem.type,
-            time: logItem.time
           });
         }))
         if (status !== 'passed') {
@@ -117,12 +113,8 @@ class processor {
             level: 'error'
           });
         }
-        const timeEnd = logArray[logArray.length - 1] && logArray[logArray.length - 1].time;
-        const calcEndTime = this._client.helpers.now();
-        const end_time = timeEnd ? Math.max(this._client.helpers.now(), timeEnd) : calcEndTime;
         return this._client.finishTestItem(testObj.tempId, {
-          status: statusMap[status] || 'passed',
-          end_time
+          status: statusMap[status] || 'passed'
         });
       })
     )
