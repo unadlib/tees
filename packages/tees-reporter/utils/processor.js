@@ -96,7 +96,7 @@ class processor {
           if (logItem.type === 'screenshot') {
             const fileData = await promiseReadfile(logItem.info);
             return this._client.sendLog(testObj.tempId, {
-              message: `🕙【Time】: ${formatDate(logItem.time)}\nscreenshot`,
+              message: `🕙[ Time ]: ${formatDate(logItem.time)}\nscreenshot`,
               level: 'trace',
               time
             }, {
@@ -106,7 +106,7 @@ class processor {
             });
           }
           return this._client.sendLog(testObj.tempId, {
-            message: `🕙【Time】: ${formatDate(logItem.time)}\n${logItem.info}`,
+            message: `🕙[ Time ]: ${formatDate(logItem.time)}\n${logItem.info}`,
             level: logItem.type,
             time
           });
