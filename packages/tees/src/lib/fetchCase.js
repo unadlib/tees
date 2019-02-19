@@ -84,9 +84,32 @@ const create = async (caseID, cmd) => {
   }
 };
 
-const update = async () => {
-  // TODO implement update cases from custom cases server.
-  console.log('To be developed.');
+const update = async (caseID, cmd) => {
+  const cmdServicesList = handleCommand(caseID, cmd);
+  let Services;
+  for (const {
+    handler, caseID, featuresPath, ...params
+  } of cmdServicesList) {
+    try {
+      // eslint-disable-next-line
+      const servicesModule = require(resolve(process.cwd(), handler));
+      Services = (servicesModule && servicesModule.__esModule) ?
+        servicesModule.default :
+        servicesModule;
+    } catch (error) {
+      throw new Error(error);
+    }
+    const services = new Services(params);
+    if (!featuresPath || featuresPath === '') {
+      console.error(`Please enter featuresPath in ${configPath}`);
+      process.exit();
+      return;
+    }
+
+    for (const id of caseID) {
+      await services.updateCaseTemplate(id, featuresPath);
+    }
+  }
 };
 
 const mkdir = async (cmd) => {
