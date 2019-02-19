@@ -49,9 +49,19 @@ const promiseReadfile = (path) => {
     })
   })
 }
+/**
+ * format timestamp to yy-MM-dd hh:mm:ss
+ * @param {number} timestamp 
+ */
+const formatDate = (timestamp) => 
+	new Date(timestamp - new Date().getTimezoneOffset() * 60 * 1000)
+		.toISOString()
+		.slice(0, 19)
+    .replace('T', ' ')
 
 module.exports = {
   filterSkipTest,
   formatConsole,
   promiseReadfile,
+  formatDate
 };

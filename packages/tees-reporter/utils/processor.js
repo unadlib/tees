@@ -1,7 +1,7 @@
 const uuid = require('uuid');
 const RPClient = require('reportportal-client');
 const statusMap = require('../constants/status');
-const { filterSkipTest, formatConsole, promiseReadfile } = require('./helper');
+const { filterSkipTest, formatConsole, promiseReadfile, formatDate } = require('./helper');
 
 class processor {
   constructor(options) {
@@ -90,12 +90,15 @@ class processor {
           description: fullName,
           start_time
         }, this._launchObj.tempId, suiteTempId);
-        await Promise.all(logArray.map(async (logItem) => {
+        const currentTime = this._client.helpers.now();
+        await Promise.all(logArray.map(async (logItem, index) => {
+          const time = currentTime + index;
           if (logItem.type === 'screenshot') {
             const fileData = await promiseReadfile(logItem.info);
             return this._client.sendLog(testObj.tempId, {
-              message: `🕙【Time】: ${logItem.time}\nscreenshot`,
+              message: `🕙[ Time ]: ${formatDate(logItem.time)}\nscreenshot`,
               level: 'trace',
+              time
             }, {
               name: uuid.v4(),
               type: 'image/png',
@@ -103,8 +106,9 @@ class processor {
             });
           }
           return this._client.sendLog(testObj.tempId, {
-            message: `🕙【Time】: ${logItem.time}\n${logItem.info}`,
+            message: `🕙[ Time ]: ${formatDate(logItem.time)}\n${logItem.info}`,
             level: logItem.type,
+            time
           });
         }))
         if (status !== 'passed') {
