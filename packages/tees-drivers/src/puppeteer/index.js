@@ -30,7 +30,7 @@ class Query extends BaseQuery {
 
   async clickToGetNewOpenPage(selector, browser, options = {}) {
     const openEventPage = new Promise((resolve) => {
-      browser.on('targetchanged', async (target) => {
+      browser.on('targetcreated', async (target) => {
         resolve(target.page());
       });
     });
