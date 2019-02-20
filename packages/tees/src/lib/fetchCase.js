@@ -22,14 +22,14 @@ function handleCommand(arg, cmd) {
       cmd.origin = config.caseServices.defaultOrigin;
       console.warn(`you are using defaultOrigin --> ${config.caseServices.defaultOrigin}`);
     }
-    cmdServices = { list: [{ origin: cmd.origin, caseID: caseIDArray }] };
+    cmdServices = { list: [{ origin: cmd.origin, caseIDs: caseIDArray }] };
   } else if (cmd.origin) {
     cmdServices = { list: [{ origin: cmd.origin }] };
   } else {
     try {
       cmdServices = JSON.parse(cmd.service);
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
   }
 
@@ -56,11 +56,11 @@ function handleCommand(arg, cmd) {
   return cmdServicesList;
 }
 
-const create = async (caseID, cmd) => {
-  const cmdServicesList = handleCommand(caseID, cmd);
+const create = async (input, cmd) => {
+  const cmdServicesList = handleCommand(input, cmd);
   let Services;
   for (const {
-    handler, caseID, featuresPath, ...params
+    handler, caseIDs, featuresPath, ...params
   } of cmdServicesList) {
     try {
       // eslint-disable-next-line
@@ -69,7 +69,7 @@ const create = async (caseID, cmd) => {
         servicesModule.default :
         servicesModule;
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
     const services = new Services(params);
     if (!featuresPath || featuresPath === '') {
@@ -78,17 +78,17 @@ const create = async (caseID, cmd) => {
       return;
     }
 
-    for (const id of caseID) {
+    for (const id of caseIDs) {
       await services.createCaseTemplate(id, featuresPath);
     }
   }
 };
 
-const update = async (caseID, cmd) => {
-  const cmdServicesList = handleCommand(caseID, cmd);
+const update = async (input, cmd) => {
+  const cmdServicesList = handleCommand(input, cmd);
   let Services;
   for (const {
-    handler, caseID, featuresPath, ...params
+    handler, caseIDs, featuresPath, ...params
   } of cmdServicesList) {
     try {
       // eslint-disable-next-line
@@ -97,7 +97,7 @@ const update = async (caseID, cmd) => {
         servicesModule.default :
         servicesModule;
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
     const services = new Services(params);
     if (!featuresPath || featuresPath === '') {
@@ -106,7 +106,7 @@ const update = async (caseID, cmd) => {
       return;
     }
 
-    for (const id of caseID) {
+    for (const id of caseIDs) {
       await services.updateCaseTemplate(id, featuresPath);
     }
   }
@@ -125,7 +125,7 @@ const mkdir = async (cmd) => {
         servicesModule.default :
         servicesModule;
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
     const services = new Services(params);
     if (!featuresPath || featuresPath === '') {
