@@ -152,6 +152,10 @@ class Query extends BaseQuery {
     return element;
   }
 
+  /**
+   * To find an element in html page
+   * @param {*} selector: css selector like syntax
+   */
   async $$(selector, options) {
     const _selector = this.getSelector(selector, options);
     const elements = await this._node.$$(_selector);
