@@ -4,7 +4,11 @@
   "description": "Universal test framework for front-end",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env NODE_ENV=development jest --config ./scripts/jest/config.js",
+    "watch": "cross-env NODE_ENV=development jest --config ./scripts/jest/watch.js",
+    "lint": "node ./scripts/eslint.js",
+    "build": "node ./scripts/build.js",
+    "prettier": "node ./scripts/prettier.js",
     "commit": "npx git-cz",
     "publish": "lerna publish --silent"
   },

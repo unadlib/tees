@@ -1,15 +1,36 @@
 # tees
- `tees` is a complex of E2E test framework, it's based on `jest` as test runner.
 
+ `tees` is a complex of E2E test framework, it's based on `jest` as test runner.
 
 ### Contents
 
--   [APIs Reference](https://github.com/unadlib/tees#api-reference)
-    -   [Test CLI](https://github.com/unadlib/tees#test-cli)
-    -   [Project Config](https://github.com/unadlib/tees#project-config)
-    -   [Test Drivers](https://github.com/unadlib/tees#test-drivers)
-    -   [Test Hooks](https://github.com/unadlib/tees#test-hooks)
--   [Benchmark Results](https://github.com/unadlib/tees#benchmark-results)
+- [Getting Started](#getting-started)
+- [Additional Configuration](#additional-configuration)
+- [Tutorial](#tutorial)
+- [Advanced Guides](#advanced-guides)
+- [API Reference](#api-reference)
+  - [Test CLI](#test-cli)
+  - [Project Config](#project-config)
+  - [Test Drivers](#test-drivers)
+  - [Test Hooks](#test-hooks)
+- [Benchmark Results](#benchmark-results)
+- [Contribution Guide](#contribution-guide)
+
+### Getting Started
+
+TODO
+
+### Additional Configuration
+
+TODO
+
+### Tutorial
+
+TODO
+
+### Advanced Guides
+
+TODO
 
 ### APIs Reference
 
@@ -73,6 +94,8 @@ context.driver.addAfterHook(async () => {
 
 ### Benchmark Results
 
+// device and environmental information
+
 | Drivers                             | cases | threads | sandbox | performance | stability |
 | ----------------------------------- | ----- | ------- | ------- | ----------- | --------- |
 | **puppeteer/Firefox/Chrome/Safari** | 1600  | 1       |         | 1312.125s   | ✅         |
@@ -91,3 +114,12 @@ context.driver.addAfterHook(async () => {
 > Selenium webdriver multithreading operation is not stable.</br>
 > Selenium Webdriver Safari does not support multithreading.</br>
 > Enzyme does not support non-sandbox mode(Default forced sandbox mode).
+
+### [Contribution Guide](CONTRIBUTION.md)
+
+Read our [contribution guide](CONTRIBUTION.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Tees.
+
+
+### License
+
+Tees is MIT licensed.
