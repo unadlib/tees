@@ -11,10 +11,10 @@ cache:
 sudo: false
 after_success:
   - npm run test
+before_deploy:
+  - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
 deploy:
 - provider: script
-  email: $NPM_EMAIL
-  api_key: $NPM_TOKEN
   script: yarn run lerna:publish
   skip_cleanup: true
   on:
