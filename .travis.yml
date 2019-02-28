@@ -11,3 +11,15 @@ cache:
 sudo: false
 after_success:
   - npm run test
+deploy:
+- provider: npm
+  email: $NPM_EMAIL
+  api_key: $NPM_TOKEN
+  skip_cleanup: true
+  on:
+    node: 8
+    tags: true
+    repo: unadlib/tees
+    all_branches: true
+after_deploy:
+- "echo 'Successful deployment!'"
