@@ -15,6 +15,7 @@ deploy:
 - provider: npm
   email: $NPM_EMAIL
   api_key: $NPM_TOKEN
+  script: yarn run lerna:publish
   skip_cleanup: true
   on:
     node: 8

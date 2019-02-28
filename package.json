@@ -9,7 +9,8 @@
     "build": "node ./scripts/build.js",
     "prettier": "node ./scripts/prettier.js",
     "commit": "npx git-cz",
-    "publish": "lerna publish --silent"
+    "lerna:version": "lerna version prerelease",
+    "lerna:publish": "lerna publish from-git --yes --npm-client yarn --npm-tag beta"
   },
   "private": true,
   "devEngines": {
@@ -38,7 +39,7 @@
     "cross-env": "^5.2.0",
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^24.1.0",
-    "lerna": "^2.11.0"
+    "lerna": "^3.13.1"
   },
   "config": {
     "commitizen": {
