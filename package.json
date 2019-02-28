@@ -10,7 +10,7 @@
     "build": "node ./scripts/build.js",
     "prettier": "node ./scripts/prettier.js",
     "commit": "git-cz",
-    "lerna:version": "lerna version prerelease",
+    "lerna:version": "lerna version prerelease --force-publish && yarn run lerna:postversion",
     "lerna:postversion": "chan release --group-changes $(node -p -e \"require('./lerna.json').version\") && git add CHANGELOG.md && git commit -m \"Update: changelog\" && git push --follow-tags",
     "lerna:publish": "lerna publish from-git --yes --npm-client yarn --npm-tag latest"
   },
