@@ -1,4 +1,5 @@
 {
+  "name": "tees-monorepo",
   "version": "1.0.0",
   "description": "Universal test framework for front-end",
   "main": "index.js",
@@ -10,7 +11,7 @@
     "prettier": "node ./scripts/prettier.js",
     "commit": "git-cz",
     "lerna:version": "lerna version prerelease --no-git-tag-version --no-push",
-    "lerna:publish": "lerna publish from-git --yes --npm-client yarn --npm-tag alpha"
+    "lerna:publish": "lerna publish from-git --yes --npm-tag alpha"
   },
   "private": true,
   "devEngines": {
