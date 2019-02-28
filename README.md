@@ -1,7 +1,10 @@
 # tees
 
- `tees` is a complex of E2E test framework, it's based on `jest` as test runner.
+[![Travis](https://img.shields.io/travis/unadlib/tees.svg)](https://travis-ci.org/unadlib/tees)
+[![npm](https://img.shields.io/npm/v/tees.svg)](https://www.npmjs.com/package/tees)
 
+ `tees` is a complex of E2E test framework, it's based on `jest` as test runner.
+ 
 ### Contents
 
 - [Getting Started](#getting-started)
