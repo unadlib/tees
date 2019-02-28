@@ -43,6 +43,13 @@ Submitting a pull request, please make sure the following is done:
     ```sh
     yarn watch
     ```
+
+5.  If you've implemented some feature or fixed some bugs. You must use `yarn commit` to make your new commit more normative.
+
+  ```sh
+  yarn commit
+  ```
+
 Other commands:
 
 - `yarn lint` checks the code style.
@@ -56,4 +63,4 @@ Some of the packages within `tees` have a `__tests__` directory. This is where u
 
 ### Dealing with Bugs
 
-We are using GitHub `Issues` for our public bugs. We keep a close eye on this and try to make it clear when we have an internal fix in progress. Before filing a new task, try to make sure your problem doesn’t already exist.
+We are using GitHub Issues for our public bugs. We keep a close eye on this and try to make it clear when we have an internal fix in progress. Before filing a new task, try to make sure your problem doesn’t already exist.

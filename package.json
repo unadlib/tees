@@ -1,11 +1,10 @@
 {
-  "name": "tees",
   "version": "1.0.0",
   "description": "Universal test framework for front-end",
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=development jest --config ./scripts/jest/config.js",
-    "watch": "cross-env NODE_ENV=development jest --config ./scripts/jest/watch.js",
+    "watch": "yarn test --watch",
     "lint": "node ./scripts/eslint.js",
     "build": "node ./scripts/build.js",
     "prettier": "node ./scripts/prettier.js",
@@ -36,7 +35,9 @@
   "homepage": "https://github.com/unadlib/tees#readme",
   "devDependencies": {
     "commitizen": "^3.0.5",
+    "cross-env": "^5.2.0",
     "cz-conventional-changelog": "^2.1.0",
+    "jest": "^24.1.0",
     "lerna": "^2.11.0"
   },
   "config": {
