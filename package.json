@@ -8,9 +8,9 @@
     "lint": "node ./scripts/eslint.js",
     "build": "node ./scripts/build.js",
     "prettier": "node ./scripts/prettier.js",
-    "commit": "npx git-cz",
+    "commit": "git-cz",
     "lerna:version": "lerna version prerelease",
-    "lerna:publish": "lerna publish from-git --yes --npm-client yarn --npm-tag beta"
+    "lerna:publish": "lerna publish from-git --yes --npm-client yarn --npm-tag alpha"
   },
   "private": true,
   "devEngines": {
