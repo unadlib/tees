@@ -232,7 +232,14 @@ function testCase(caseParams, fn, isOnly = false) {
 }
 
 function testSkip(...args) {
-  return _test.skip(...args);
+  const firstArg = args.shift();
+  let descriptor;
+  if (typeof firstArg === 'object') {
+    descriptor = firstArg.title;
+  } else {
+    descriptor = firstArg;
+  }
+  return _test.skip(descriptor, args);
 }
 
 function testOnly(...args) {
