@@ -6,31 +6,63 @@ const {
 
 describe('utils/check', () => {
   test('isNil', () => {
-    [undefined, null].forEach((item) => {
+    [
+      undefined,
+      null
+    ].forEach((item) => {
       (expect(isNil(item)).toBeTruthy());
     });
     expect(isNil()).toBeTruthy();
-    [{test: 1}, 1, true, false, 'test', {}, [], [1]].forEach((item) => {
+    [
+      { test: 1 }, 
+      0, 
+      1, 
+      true, 
+      false, 
+      '', 
+      'test', 
+      {}, 
+      [], 
+      [1]
+    ].forEach((item) => {
       (expect(isNil(item)).toBeFalsy());
     });
   })
 
-  test('isPlainobject', ()=> {
-    [{}, {test: 1}].forEach((item) => {
+  test('isPlainobject', () => {
+    [
+      {}, 
+      { test: 1 }
+    ].forEach((item) => {
       (expect(isPlainobject(item)).toBeTruthy());
     });
-    [1, true, false, 'test', []].forEach((item) => {
+    [
+      1,
+      true,
+      false,
+      'test',
+      []
+    ].forEach((item) => {
       (expect(isPlainobject(item)).toBeFalsy());
     });
     expect(isPlainobject()).toBeFalsy();
   })
 
-  test('checkValidity', ()=> {
-    [[], undefined, null].forEach((item) => {
+  test('checkValidity', () => {
+    [
+      [],
+      undefined,
+      null
+    ].forEach((item) => {
       (expect(checkValidity(item)).toEqual(['./']));
     });
     expect(checkValidity()).toEqual(['./']);
-    expect(checkValidity('./test/test')).toEqual('./test/test');
-    expect(checkValidity('!@#$%^&*()_+-=<>,.?/:;"\'`~|\\}/{[]}')).toEqual('!@#$%^&*()_+-=<>,.?/:;"\'`~|\\}/{[]}');
+    [
+      '',
+      './test/test',
+      '!@#$%^&*()_+-=<>,.?/:;"\'`~|\\}/{[]}'
+    ].forEach((item) => {
+      (expect(checkValidity(item)).toEqual(item));
+    });
   })
 });
