@@ -9,6 +9,7 @@
   "main": "src/index.js",
   "author": "",
   "license": "MIT",
+  "types": "Drivers.d.ts",
   "peerDependencies": {
     "react": "^16.7.0",
     "react-dom": "^16.7.0"
@@ -17,7 +18,6 @@
     "enzyme": "^3.5.0",
     "enzyme-adapter-react-16": "^1.3.0",
     "puppeteer": "^1.7.0",
-    "selenium-webdriver": "^4.0.0-alpha.1",
-    "typings": "^2.1.1"
+    "selenium-webdriver": "^4.0.0-alpha.1"
   }
 }
