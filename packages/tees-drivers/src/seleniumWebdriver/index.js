@@ -87,6 +87,23 @@ class Query extends BaseQuery {
     await this._node.get(url);
   }
 
+  async clickToGetNewOpenPage(selector, browser, options = {}) {
+    await this.click(selector, options);
+    await this.waitFor(3000);
+    const handles = await this._node.getAllWindowHandles();
+    await this._node.switchTo().window(handles[handles.length - 1]);
+    return this._node;
+  }
+    
+  async backPreviousPage() {
+    const handles = await this._node.getAllWindowHandles();
+    if(handles.length > 1 ) {
+      await this._node.switchTo().window(handles[handles.length - 2]);
+    } else {
+      await this._node.switchTo().window(handles[handles.length - 1]);
+    }
+  }
+
   async screenshot({
     path
   } = {}) {
@@ -139,13 +156,13 @@ class Query extends BaseQuery {
 
   async $(selector, options) {
     const _selector = this.getSelector(selector, options);
-    const element = this._node.findElement(_selector);
+    const element = this._node.findElement(By.css(_selector));
     return element;
   }
 
   async $$(selector, options) {
     const _selector = this.getSelector(selector, options);
-    const elements = this._node.findElements(_selector);
+    const elements = this._node.findElements(By.css(_selector));
     return elements;
   }
 }
