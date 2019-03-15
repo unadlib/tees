@@ -14,13 +14,13 @@ after_success:
 before_deploy:
   - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
 deploy:
-- provider: script
-  script: yarn run lerna:publish
-  skip_cleanup: true
-  on:
-    node: 8
-    tags: true
-    repo: unadlib/tees
-    all_branches: true
+  - provider: script
+    script: yarn run lerna:publish
+    skip_cleanup: true
+    on:
+      node: 8
+      tags: true
+      repo: unadlib/tees
+      all_branches: true
 after_deploy:
-- "echo 'Successful deployment!'"
+  - "echo 'Successful deployment!'"
