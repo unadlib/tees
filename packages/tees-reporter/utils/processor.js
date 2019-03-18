@@ -114,7 +114,8 @@ class processor {
         if (status !== 'passed') {
           this._client.sendLog(testObj.tempId, {
             message: failureMessages.join('\n'),
-            level: 'error'
+            level: 'error',
+            time: currentTime + logArray.length + 1000,
           });
         }
         return this._client.finishTestItem(testObj.tempId, {
