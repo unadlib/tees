@@ -63,7 +63,7 @@ TODO
 
 | Reference | Description                                     | arguments           |
 | --------- | ----------------------------------------------- | ------------------- |
-| goto      | Current page goto a new page with a url.        | (config)            |
+| goto      | Current page goto a new page with a url.        | (url, config)            |
 | clear     | Clear the value of this element.                | (selector, options) |
 | newPage   | Create a new page in a default browser context. | ()                  |
 | closePage | Closes the current window.                      | ()                  |
