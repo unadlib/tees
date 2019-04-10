@@ -177,7 +177,7 @@ class Driver extends BaseDriver {
       ...configSetting,
       args: [
         ...this._options.driver.setting.args,
-        ...configSetting.args,
+        ...configSetting && configSetting.args || '',
       ],
     }
 
