@@ -48,17 +48,8 @@ class processor {
     });
   }
 
-  startTestSuiteItem({
-    name,
-    startTime = this._client.helpers.now(),
-  }) {
-    const { appDirectory } = this._options;
-    const path = name.replace(appDirectory, '');
-    return this._client.startTestItem({
-      name: path,
-      start_time: startTime - 2000,
-      type: 'SUITE',
-    }, this._launchObj.tempId);
+  startTestSuiteItem() {
+    return this._client.helpers.now() - 2000;
   }
 
   async logTestsItems({
@@ -126,7 +117,8 @@ class processor {
   }
 
   async finishTestSuiteItem({
-    tempId,
+    path,
+    startTime,
     testResult
   }) {
     const {
@@ -146,8 +138,18 @@ class processor {
       leaks,
       testExecError,
     } = testResult;
-    const consoleInfo = testResult.console;
+    const filterCaseMessgae = "Your test suite must contain at least one test";
+    if (failureMessage && failureMessage.includes(filterCaseMessgae)) {
+      return false;
+    }
 
+    const tempId = this._client.startTestItem({
+      name: path,
+      start_time: startTime,
+      type: 'SUITE',
+    }, this._launchObj.tempId).tempId;
+
+    const consoleInfo = testResult.console;
     await this.logTestsItems({
       suiteTempId: tempId,
       tests: testResults,
@@ -155,7 +157,7 @@ class processor {
     });
     if (failureMessage || testExecError) {
       this._client.sendLog(tempId, {
-        message: `${failureMessage}\n${testExecError}`,
+        message: `${failureMessage}`,
         status: 'trace'
       });
     }
