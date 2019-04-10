@@ -42,7 +42,7 @@ class Query extends BaseQuery {
   async getTexts(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     await this.waitForSelector(selector, options);
-    const innerTextList = await this._node.$$eval(_selector, nodes => nodes.map(n => n.innerText));
+    const innerTextList = await this._node.$$eval(_selector, nodes => nodes.map(n => (n.innerText || n.textContent)));
     return innerTextList;
   }
 
@@ -202,7 +202,7 @@ class Driver extends BaseDriver {
   }
 
   async goto(config) {
-    await this._page.goto(config.location);
+    await this._page.goto(config.location, {waitUntil: 'load', timeout: 300 * 1000});
   }
 
   async closePage() {
