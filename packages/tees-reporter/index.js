@@ -15,19 +15,16 @@ class reporter {
   }
 
   onTestStart({ path }) {
-    this._suitesMap[path] = this._processor.startTestSuiteItem({
-      name: path
-    });
+    this._suitesMap[path] = this._processor.startTestSuiteItem();
   }
 
   onTestResult({ path }, testResult) {
-    const tempId = this._suitesMap[path] && this._suitesMap[path].tempId;
-    if (tempId) {
-      return this._processor.finishTestSuiteItem({
-        tempId,
-        testResult
-      });
-    }
+    const startTime = this._suitesMap[path];
+    return this._processor.finishTestSuiteItem({
+      path,
+      startTime,
+      testResult
+    });
   }
 
   onRunComplete(_, results) {
