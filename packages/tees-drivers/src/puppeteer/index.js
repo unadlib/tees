@@ -202,7 +202,7 @@ class Driver extends BaseDriver {
   }
 
   async goto(config) {
-    await this._page.goto(config.location, {waitUntil: 'load', timeout: 300 * 1000});
+    await this._page.goto(config.location, {waitUntil: 'load', timeout: 3 * 60 * 1000});
   }
 
   async closePage() {
