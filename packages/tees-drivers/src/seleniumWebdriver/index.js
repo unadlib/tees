@@ -215,7 +215,7 @@ module.exports = (browser) => {
         ddOptions = new dr.Options().addExtensions(extPath);
         mergeSetting = {
           ...this._options.driver.setting,
-          ...configSetting,
+          ...configSetting && configSetting.args || '',
           ...ddOptions
           
         }
