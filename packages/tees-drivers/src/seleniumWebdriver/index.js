@@ -96,8 +96,19 @@ class Query extends BaseQuery {
     return element;
   }
 
+  async url() {
+    return this._node.getCurrentUrl();
+  }
+
   async goto(url) {
     await this._node.get(url);
+  }
+
+  async getNewOpenPage() {
+    await this.waitFor(3000);
+    const handles = await this._node.getAllWindowHandles();
+    await this._node.switchTo().window(handles[handles.length - 1]);
+    return this._node;
   }
 
   async clickToGetNewOpenPage(selector, browser, options = {}) {
