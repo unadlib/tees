@@ -83,7 +83,7 @@ class Query extends BaseQuery {
   async click(selector, options) {
     await this.waitForSelector(selector, options);
     const _selector = this.getSelector(selector, options);
-    await this._node.click(_selector);
+    await this._node.click(_selector, options);
   }
 
   async type(selector, value, options) {

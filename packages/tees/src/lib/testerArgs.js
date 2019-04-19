@@ -122,7 +122,7 @@ function getTesterArgs(options) {
   const testerConfig = {
     ...options.testerParams,
     setupFiles: [`${rootPath}/${setupFile}`],
-    setupTestFrameworkScriptFile: `${rootPath}/${postSetupFile}`,
+    setupFilesAfterEnv: [`${rootPath}/${postSetupFile}`],
     globals,
     globalSetup,
     globalTeardown,
