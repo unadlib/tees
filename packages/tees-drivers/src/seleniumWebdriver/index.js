@@ -34,10 +34,20 @@ const seleniumWebdriverSetting = {
 };
 
 class Query extends BaseQuery {
+
   async getText(selector, options) {
-    const element = await this._getElement(selector, options);
-    const innerText = element.getAttribute('innerText');
-    return innerText;
+    const [ text ] = await this.getTexts(selector, options) || [];
+    return text;
+  }
+
+  async getTexts(selector, options) {
+    const elements = await this.$$(selector, options);
+    let innerTexts = [];
+    for(const ele of elements) {
+      const text = await ele.getText() || await ele.getAttribute('textContent'); 
+      innerTexts.push(text);
+    }
+    return innerTexts;
   }
 
   async getAttribute(selector, attribute, options = {}) {
@@ -94,7 +104,13 @@ class Query extends BaseQuery {
     await this._node.switchTo().window(handles[handles.length - 1]);
     return this._node;
   }
-    
+
+  async getNewOpenPage() {
+    const handles = await this._node.getAllWindowHandles();
+    await this._node.switchTo().window(handles[handles.length - 1]);
+    return this._node;
+  }
+
   async backPreviousPage() {
     const handles = await this._node.getAllWindowHandles();
     if(handles.length > 1 ) {
@@ -136,9 +152,13 @@ class Query extends BaseQuery {
     return handle;
   }
 
+  async reload() {
+    await this._node.refresh();
+  }
+
   async clear(selector, options) {
     const element = await this._getElement(selector, options);
-    element.clear();
+    await element.clear();
   }
 
   async waitForFunction(...args) {

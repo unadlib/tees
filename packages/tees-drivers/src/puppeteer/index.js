@@ -131,6 +131,10 @@ class Query extends BaseQuery {
     return result;
   }
 
+  async reload() {
+    await this._node.reload();
+  }
+
   async clear(selector, options) {
     await this.waitForSelector(selector, options);
     const _selector = this.getSelector(selector, options);
