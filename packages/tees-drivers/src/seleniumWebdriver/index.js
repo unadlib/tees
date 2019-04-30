@@ -162,7 +162,11 @@ class Query extends BaseQuery {
 
   async clear(selector, options) {
     const element = await this._getElement(selector, options);
-    element.clear();
+    // element.clear();
+    const text = await element.getAttribute("value");
+    for(let i=0; i < text.length; i++) {
+      element.sendKeys('\uE003');
+    }
   }
 
   async waitForFunction(...args) {
