@@ -8610,7 +8610,7 @@ scheduler@^0.12.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-selenium-webdriver@^4.0.0-alpha.1, "selenium-webdriver@github:webexts/selenium#nodejs", selenium-webdriver@webexts/selenium#nodejs:
+selenium-webdriver@^4.0.0-alpha.1, selenium-webdriver@webexts/selenium#nodejs:
   version "4.0.0-alpha.1"
   resolved "https://codeload.github.com/webexts/selenium/tar.gz/e182dbb43ddd96083511587e9c6f8455884b6070"
   dependencies:
