@@ -19,6 +19,7 @@ interface $ {
     clear(selector: string, options?: Object): void
     $(selector: string, options?: Object): Promise<?ElementHandle>
     $$(selector: string, options?: Object): Promise<Array<ElementHandle>>
+    reload():void
    }
    interface $_Static {
     (node: Object):$
