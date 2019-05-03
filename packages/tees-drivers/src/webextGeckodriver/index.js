@@ -20,9 +20,18 @@ const EXTENSION_TOOL_BAR_ID = 'integration-for-google-firefox-version_ringcentra
 
 class Query extends BaseQuery {
   async getText(selector, options) {
-    const element = await this._getElement(selector, options);
-    const innerText = element.getAttribute('innerText');
-    return innerText;
+    const [ text ] = await this.getTexts(selector, options) || [];
+    return text;
+  }
+
+  async getTexts(selector, options) {
+    const elements = await this.$$(selector, options);
+    let innerTexts = [];
+    for(const ele of elements) {
+      const text = await ele.getText() || await ele.getAttribute('textContent'); 
+      innerTexts.push(text);
+    }
+    return innerTexts;
   }
 
   async getAttribute(selector, attribute, options = {}) {
@@ -98,6 +107,12 @@ class Query extends BaseQuery {
     } 
   }
 
+  async getNewOpenPage() {
+    const handles = await this._node.getAllWindowHandles();
+    await this._node.switchTo().window(handles[handles.length - 1]);
+    return this._node;
+  }
+
   async screenshot({
     path
   } = {}) {
@@ -130,9 +145,17 @@ class Query extends BaseQuery {
     return handle;
   }
 
+  async reload() {
+    await this._node.refresh();
+  }
+
   async clear(selector, options) {
     const element = await this._getElement(selector, options);
-    element.clear();
+    // element.clear();
+    const text = await element.getAttribute("value");
+    for(let i=0; i < text.length; i++) {
+      element.sendKeys('\uE003');
+    }
   }
 
   async waitForFunction(...args) {
