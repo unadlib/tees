@@ -42,13 +42,8 @@
     "commitizen": "^3.0.5",
     "cross-env": "^5.2.0",
     "cz-conventional-changelog": "^2.1.0",
-    "geckodriver": "^1.16.1",
-    "get-port": "^5.0.0",
     "jest": "^24.1.0",
-    "lerna": "^3.13.1",
-    "selenium-webdriver": "webexts/selenium#nodejs",
-    "web-ext": "denar90/web-ext#build-args-feature",
-    "webextensions-geckodriver": "^0.5.1"
+    "lerna": "^3.13.1"
   },
   "config": {
     "commitizen": {
