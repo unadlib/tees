@@ -188,51 +188,54 @@ class Driver extends BaseDriver {
     super(options, program);
   }
 
-  async run({ configSetting, type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
-    const extDir = extension.split('.xpi')[0];
-    const extensionPath = path.resolve(process.cwd(), extDir);
-    if (await fs_extra.pathExistsSync(extensionPath)) {
-      await fs_extra.remove(extensionPath)
+  async run({type, extension='', isHeadless } = {}) {
+    const isExtension = type === 'extension';
+    if (isExtension && extension!='') {
+      const extDir = extension.split('.xpi')[0];
+      const extensionPath = path.resolve(process.cwd(), extDir);
+      if (await fs_extra.pathExistsSync(extensionPath)) {
+        await fs_extra.remove(extensionPath)
+          .then(() => {
+            console.log('Clean up extension dir Success!');
+          }).catch((err) => {
+            console.error(err);
+          });
+      } 
+      await fs_extra.mkdir(extensionPath)
         .then(() => {
-          console.log('Clean up extension dir Success!');
-        }).catch((err) => {
-          console.error(err);
+            console.log('make extension dir Success!');
+          }).catch((err) => {
+            console.error(err);
+          });
+        
+      await exec(`unzip -o ${extension} -d ${extensionPath}`, { maxBuffer: 1024 * 500 }, (err, stdout, stderr) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          console.log(`stdout: ${stdout}`);
+          console.log(`stderr: ${stderr}`);
         });
-    } 
-    await fs_extra.mkdir(extensionPath)
-      .then(() => {
-          console.log('make extension dir Success!');
-        }).catch((err) => {
-          console.error(err);
-        });
-      
-    await exec(`unzip -o ${extension} -d ${extensionPath}`, { maxBuffer: 1024 * 500 }, (err, stdout, stderr) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        console.log(`stdout: ${stdout}`);
-        console.log(`stderr: ${stderr}`);
-      });
 
-    const manifestPath = path.resolve(process.cwd(), `${extDir}/manifest.json`);
-    let geckodriver;
-    const webExtension = await webExtensionsGeckoDriver(manifestPath);
-    geckodriver = webExtension.geckodriver;
-    this.helper = {
-      toolbarButton() {
-        return geckodriver.wait(until.elementLocated(
-          By.id(`${EXTENSION_TOOL_BAR_ID}`)
-        ), 10000);
-      },
-      getHandles() {
-        return geckodriver.wait(async() => {
-          const handles = await geckodriver.getAllWindowHandles();
-          return handles;
-        }, 20000);
-      }
-    };
-    this._browser = geckodriver;
+      const manifestPath = path.resolve(process.cwd(), `${extDir}/manifest.json`);
+      let geckodriver;
+      const webExtension = await webExtensionsGeckoDriver(manifestPath);
+      geckodriver = webExtension.geckodriver;
+      this.helper = {
+        toolbarButton() {
+          return geckodriver.wait(until.elementLocated(
+            By.id(`${EXTENSION_TOOL_BAR_ID}`)
+          ), 10000);
+        },
+        getHandles() {
+          return geckodriver.wait(async() => {
+            const handles = await geckodriver.getAllWindowHandles();
+            return handles;
+          }, 20000);
+        }
+      };
+      this._browser = geckodriver;
+    }
   }
 
   async newPage() {
@@ -247,8 +250,6 @@ class Driver extends BaseDriver {
       let handles = await this.helper.getHandles();
       await this._browser.switchTo().window(handles[1]);
       await this._browser.setContext(firefox.Context.CONTENT);
-      const iframeLoc = await this._browser.findElement(By.id('rc-widget-adapter-frame'));
-      await this._browser.switchTo().frame(iframeLoc);
       this._page = this._browser;
     } else {
       await this._browser.get(config.location);
