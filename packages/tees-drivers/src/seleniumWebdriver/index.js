@@ -93,19 +93,23 @@ class Query extends BaseQuery {
     return element;
   }
 
+  async url() {
+    return this._node.getCurrentUrl();
+  }
+
   async goto(url) {
     await this._node.get(url);
   }
 
-  async clickToGetNewOpenPage(selector, browser, options = {}) {
-    await this.click(selector, options);
-    await this.waitFor(3000);
+  async getNewOpenPage() {
     const handles = await this._node.getAllWindowHandles();
     await this._node.switchTo().window(handles[handles.length - 1]);
     return this._node;
   }
 
-  async getNewOpenPage() {
+  async clickToGetNewOpenPage(selector, browser, options = {}) {
+    await this.click(selector, options);
+    await this.waitFor(3000);
     const handles = await this._node.getAllWindowHandles();
     await this._node.switchTo().window(handles[handles.length - 1]);
     return this._node;
