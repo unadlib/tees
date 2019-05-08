@@ -1,6 +1,6 @@
 {
   "name": "tees",
-  "version": "1.0.0-alpha.31",
+  "version": "1.0.0-alpha.33",
   "description": "Universal test framework for front-end",
   "repository": {
     "type": "git",
@@ -24,6 +24,6 @@
     "commander": "^2.17.1",
     "jest": "^24.7.1",
     "jest-circus": "^24.7.1",
-    "tees-environment": "^1.0.0-alpha.31"
+    "tees-environment": "^1.0.0-alpha.33"
   }
 }

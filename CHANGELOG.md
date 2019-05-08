@@ -5,6 +5,8 @@
 
 ## [Unreleased]
 
+## [1.0.0-alpha.33] - 2019-05-08 [YANKED]
+
 ## [1.0.0-alpha.31] - 2019-05-03 [YANKED]
 
 ## [1.0.0-alpha.30] - 2019-05-03 [YANKED]
@@ -40,7 +42,8 @@
 ## [1.0.0-alpha.16] - 2019-02-28 [YANKED]
 
 ## 1.0.0-alpha.15 - 2019-02-28
-[unreleased]: https://github.com/summergan/tees/compare/v1.0.0-alpha.31...HEAD
+[unreleased]: https://github.com/summergan/tees/compare/v1.0.0-alpha.33...HEAD
+[1.0.0-alpha.33]: https://github.com/summergan/tees/compare/v1.0.0-alpha.31...v1.0.0-alpha.33
 [1.0.0-alpha.31]: https://github.com/summergan/tees/compare/v1.0.0-alpha.30...v1.0.0-alpha.31
 [1.0.0-alpha.30]: https://github.com/summergan/tees/compare/v1.0.0-alpha.29...v1.0.0-alpha.30
 [1.0.0-alpha.29]: https://github.com/summergan/tees/compare/v1.0.0-alpha.29...v1.0.0-alpha.29
