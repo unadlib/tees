@@ -9,9 +9,6 @@ const firefox = require('selenium-webdriver/firefox');
 const safari = require('selenium-webdriver/safari');
 const ie = require('selenium-webdriver/ie');
 const edge = require('selenium-webdriver/edge');
-const path =require('path');
-require('geckodriver');
-require('chromedriver');
 const {
   Driver: BaseDriver,
   Query: BaseQuery
@@ -35,19 +32,9 @@ const seleniumWebdriverSetting = {
   ie: new ie.Options(),
   edge: new edge.Options(),
 };
-const setting = {
-  headless: false,
-  ignoreHTTPSErrors: true,
-  args: [
-    '--use-fake-ui-for-media-stream',
-    '--use-fake-device-for-media-stream',
-    '--disable-setuid-sandbox',
-    '--no-sandbox',
-  ]
-};
 
 class Query extends BaseQuery {
-
+  
   async getText(selector, options) {
     const [ text ] = await this.getTexts(selector, options) || [];
     return text;
@@ -115,7 +102,6 @@ class Query extends BaseQuery {
   }
 
   async getNewOpenPage() {
-    await this.waitFor(3000);
     const handles = await this._node.getAllWindowHandles();
     await this._node.switchTo().window(handles[handles.length - 1]);
     return this._node;
@@ -124,12 +110,6 @@ class Query extends BaseQuery {
   async clickToGetNewOpenPage(selector, browser, options = {}) {
     await this.click(selector, options);
     await this.waitFor(3000);
-    const handles = await this._node.getAllWindowHandles();
-    await this._node.switchTo().window(handles[handles.length - 1]);
-    return this._node;
-  }
-
-  async getNewOpenPage() {
     const handles = await this._node.getAllWindowHandles();
     await this._node.switchTo().window(handles[handles.length - 1]);
     return this._node;
@@ -225,71 +205,31 @@ module.exports = (browser) => {
       super(options, program);
     }
 
-    async run({configSetting, isHeadless, type, extension = '' } = {}) {
+    async run({ isHeadless } = {}) {
       this._isHeadless = isHeadless;
-      const isExtension = type === 'extension';
-      let mergeSetting;
-      let ddOptions;
-      if (isExtension) {
-        const extPath = path.resolve(process.cwd(), extension);
-        const dr = {
-          firefox: firefox,
-          chrome: chrome
-        }[webdriver]||{};
-        ddOptions = new dr.Options().addExtensions(extPath);
-        mergeSetting = {
-          ...this._options.driver.setting,
-          ...configSetting && configSetting.args || '',
-          ...ddOptions
-          
-        }
-      }
-      
+    }
+
+    async newPage() {
+      let _setting = this._options.driver.setting;
       if (this._isHeadless) {
         _setting = seleniumWebdriverSetting[`${webdriver}Headless`] || _setting;
       }
-
-      try {
-        const dd = new Builder()
-        .forBrowser(Browsers[webdriver])
-        .setFirefoxOptions(ddOptions)
-        .setChromeOptions(ddOptions)
-          // .forBrowser(Browsers[webdriver])[setKeyName](
-          //   _setting
-          // )
-          // .withCapabilities({
-          //   browserName: webdriver,
-          //   acceptSslCerts: true,
-          //   acceptInsecureCerts: true
-          // })
-          .build();
-          this._browser = dd;
-      }
-      catch(err){
-        this.handleFailure(err, this._browser)
-      }
-    }
-
-    async handleFailure(err, driver) {
-      console.error('Something went wrong!\n', err.stack, '\n');
-      driver.quit();
-    } 
-
-    async newPage() {
+      this._browser = this._program
+        .forBrowser(Browsers[webdriver])[setKeyName](
+          _setting
+        )
+        .withCapabilities({
+          browserName: webdriver,
+          acceptSslCerts: true,
+          acceptInsecureCerts: true
+        })
+        .build();
       this._page = this._browser;
     }
 
     async goto(config) {
-    if (config.type === 'extension') {
-      await this._browser.get('about:debugging');
-      const element = await this._browser.findElement(By.css(`li[data-addon-id='${config.extname}']> dl > dd[class*='internal-uuid']>span`));
-      const uuid = await  element.getAttribute('title');
-      const location = `moz-extension://${uuid}/standalong.html`;
-      await this._browser.get(location);
-    } else {
       await this._browser.get(config.location);
     }
-  }
 
     async closePage() {
       await this.close();
