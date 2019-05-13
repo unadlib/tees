@@ -104,7 +104,7 @@ class Query extends BaseQuery {
       await this._node.switchTo().window(handles[handles.length - 1]);
     } 
   }
-  
+
   async waitForClosingLatestWindow() {
     const handles = await this._node.getAllWindowHandles();
     await this._node.wait(async() => {
@@ -112,7 +112,7 @@ class Query extends BaseQuery {
       while (handles.length - currentHandles.length === 1 ) {
         return true;
       }
-    }, 15000);
+    }, 60000);
   }
 
   async getNewOpenPage() {
