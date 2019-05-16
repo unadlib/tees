@@ -25,9 +25,7 @@ const capabilities = {
     '--allow-silent-push',
     '--disable-setuid-sandbox',
     '--no-sandbox',
-    '--disable-gpu',
-    // '--start-maximized',
-    'window-size=500,500'
+    '--disable-gpu'
   ]
 };
 
