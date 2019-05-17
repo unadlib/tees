@@ -76,7 +76,7 @@ async function initProject(projectName) {
         keys: Object.keys(packageObj),
         values: Object.values(packageObj),
       });
-      fs.writeFile(path.join(process.cwd(), `${projectName}/package.json`), result, 'ascii', (err) => {
+      fs.writeFile(path.join(process.cwd(), `${projectName}/packageJson.js`), result, 'ascii', (err) => {
         if (err) throw err;
       });
     });
