@@ -43,10 +43,10 @@ async function getPromptAnswers() {
     return answers;
 }
 
-async function initProject(projectName,  cmd) {
+async function initProject(projectName) {
     mkDirSync(path.join(process.cwd(), projectName));
     mkDirSync(path.join(process.cwd(), `${projectName}/src`));
-    fs.readFile(path.join(__dirname, '../../templates/e2eConfig.js'), 'utf-8', async (err, data) => {
+    fs.readFile(path.join(__dirname, '../../templates/e2eConfig.js'), 'utf-8', (err, data) => {
       if (err) throw err;
       const configObj = {
         projectName
