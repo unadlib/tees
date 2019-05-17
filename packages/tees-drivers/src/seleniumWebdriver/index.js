@@ -49,12 +49,12 @@ const seleniumWebdriverSetting = {
 
 class Query extends BaseQuery {
   
-  async getText(selector, options) {
+  async getText(selector, options = {}) {
     const [ text ] = await this.getTexts(selector, options) || [];
     return text;
   }
 
-  async getTexts(selector, options) {
+  async getTexts(selector, options = {}) {
     const elements = await this.$$(selector, options);
     let innerTexts = [];
     for(const ele of elements) {
@@ -70,12 +70,12 @@ class Query extends BaseQuery {
     return attributeValue;
   }
 
-  async getProperty(selector, property, options) {
+  async getProperty(selector, property, options = {}) {
     const propertyValue = await this.getAttribute(selector, property, options);
     return propertyValue;
   }
 
-  async getValue(selector, options) {
+  async getValue(selector, options = {}) {
     const value = this.getAttribute(selector, 'value', options);
     return value;
   }
@@ -85,12 +85,12 @@ class Query extends BaseQuery {
     return html;
   }
 
-  async click(selector, options) {
+  async click(selector, options = {}) {
     const element = await this._getElement(selector, options);
     await element.click();
   }
 
-  async type(selector, value, options) {
+  async type(selector, value, options = {}) {
     const element = await this._getElement(selector, options);
     if (options && options.delay) {
       for (const char of value) {
@@ -102,7 +102,7 @@ class Query extends BaseQuery {
     }
   }
 
-  async waitForSelector(selector, options) {
+  async waitForSelector(selector, options = {}) {
     const element = await this._getElement(selector, options);
     return element;
   }
@@ -185,7 +185,7 @@ class Query extends BaseQuery {
     await this._node.refresh();
   }
 
-  async clear(selector, options) {
+  async clear(selector, options = {}) {
     const element = await this._getElement(selector, options);
     element.clear();
     // const text = await element.getAttribute("value");
@@ -202,22 +202,26 @@ class Query extends BaseQuery {
     await this.waitForFunction(...args);
   }
 
-  async _getElement(selector, options) {
+  async _getElement(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     const element = await this._node.wait(until.elementLocated(By.css(_selector)));
     return element;
   }
 
-  async $(selector, options) {
+  async $(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     const element = this._node.findElement(By.css(_selector));
     return element;
   }
 
-  async $$(selector, options) {
+  async $$(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     const elements = this._node.findElements(By.css(_selector));
     return elements;
+  }
+
+  async closePage(options = {}){
+    await this._node.close();
   }
 }
 
