@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const {
   Builder,
   By,
@@ -14,6 +15,19 @@ const {
   Query: BaseQuery
 } = require('../base');
 
+const capabilities = {
+  acceptSslCerts: true,
+  acceptInsecureCerts: true,
+  args: [
+    '--use-fake-ui-for-media-stream',
+    '--use-fake-device-for-media-stream',
+    '--use-file-for-fake-audio-capture',
+    '--allow-silent-push',
+    '--disable-setuid-sandbox',
+    '--no-sandbox',
+    '--disable-gpu'
+  ]
+};
 
 const Browsers = {
   chrome: 'chrome',
@@ -102,6 +116,7 @@ class Query extends BaseQuery {
   }
 
   async getNewOpenPage() {
+    await this.waitFor(3000);
     const handles = await this._node.getAllWindowHandles();
     await this._node.switchTo().window(handles[handles.length - 1]);
     return this._node;
@@ -162,11 +177,12 @@ class Query extends BaseQuery {
 
   async clear(selector, options) {
     const element = await this._getElement(selector, options);
-    // element.clear();
-    const text = await element.getAttribute("value");
-    for(let i=0; i < text.length; i++) {
-      element.sendKeys('\uE003');
-    }
+    element.clear();
+    // const text = await element.getAttribute("value");
+    // console.log(text.length,'length');
+    // for(let i=0; i < text.length; i++) {
+    //   element.sendKeys('\uE003');
+    // }
   }
 
   async waitForFunction(...args) {
@@ -195,7 +211,6 @@ class Query extends BaseQuery {
   }
 }
 
-
 module.exports = (browser) => {
   const webdriver = browser.toLowerCase();
   const setKeyName = `set${browser}Options`;
@@ -205,25 +220,63 @@ module.exports = (browser) => {
       super(options, program);
     }
 
-    async run({ isHeadless } = {}) {
+    async run({ configSetting, type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
       this._isHeadless = isHeadless;
+      let _setting = this._options.driver.setting;
+      console.log(this._isHeadless, '_isHeadless');
+      const isExtension = type === 'extension';
+      const extensionPath = path.resolve(process.cwd(), extension);
+      if (this._isHeadless) {
+        _setting = seleniumWebdriverSetting[`${webdriver}Headless`] || _setting;
+      } else {
+        console.log(webdriver);
+        _setting = seleniumWebdriverSetting[`${webdriver}`]
+      }
+      if(webdriver ==='chrome' || webdriver === 'firefox') {
+        _setting.windowSize(configSetting.defaultViewport || {width: 1000, height: 800});
+        const capabilitiesArgs = [
+          ...capabilities && capabilities.args || '',
+          ...configSetting && configSetting.args || ''
+        ];
+        _setting.addArguments(capabilitiesArgs);
+        if(isExtension) {
+          if(this._isHeadless) {
+            console.error('Headless mode is not supported by extension!!!');
+            return;
+          }
+          if(webdriver !== 'chrome') {
+            console.error('firefox is not supported by extension!!!,you can use firefox-extension');
+            return;
+          }
+          _setting.addArguments([
+            `--disable-extensions-except=${extensionPath}`,
+            `--load-extension=${extensionPath}`
+          ])
+        }
+        if(!!userDataDir) {
+          _setting.addArguments([
+            `--user-data-dir=${userDataDir}`
+          ])
+        }
+      }
+
+      const mergeCapabilities = {
+      ...capabilities,
+      ...configSetting,
+      browserName: webdriver,
+    }
+
+    this._browser = this._program
+        .forBrowser(Browsers[webdriver])[setKeyName]( 
+          _setting
+        )
+        .withCapabilities(
+          mergeCapabilities
+        )
+        .build();
     }
 
     async newPage() {
-      let _setting = this._options.driver.setting;
-      if (this._isHeadless) {
-        _setting = seleniumWebdriverSetting[`${webdriver}Headless`] || _setting;
-      }
-      this._browser = this._program
-        .forBrowser(Browsers[webdriver])[setKeyName](
-          _setting
-        )
-        .withCapabilities({
-          browserName: webdriver,
-          acceptSslCerts: true,
-          acceptInsecureCerts: true
-        })
-        .build();
       this._page = this._browser;
     }
 
