@@ -16,8 +16,6 @@ const {
   Query: BaseQuery
 } = require('../base');
 
-const EXTENSION_TOOL_BAR_ID = 'integration-for-google-firefox-version_ringcentral_com-browser-action';
-
 class Query extends BaseQuery {
   async getText(selector, options) {
     const [ text ] = await this.getTexts(selector, options) || [];
@@ -107,6 +105,16 @@ class Query extends BaseQuery {
     } 
   }
 
+  async waitForClosingLatestWindow() {
+    const handles = await this._node.getAllWindowHandles();
+    await this._node.wait(async() => {
+      const currentHandles = await this._node.getAllWindowHandles();
+      while (handles.length - currentHandles.length === 1 ) {
+        return true;
+      }
+    }, 60000);
+  }
+
   async getNewOpenPage() {
     const handles = await this._node.getAllWindowHandles();
     await this._node.switchTo().window(handles[handles.length - 1]);
@@ -188,7 +196,7 @@ class Driver extends BaseDriver {
     super(options, program);
   }
 
-  async run({type, extension='', isHeadless } = {}) {
+  async run({type, extension='', firefox_extension_bar_id= '', isHeadless } = {}) {
     const isExtension = type === 'extension';
     if (isExtension && extension!='') {
       const extDir = extension.split('.xpi')[0];
@@ -224,7 +232,7 @@ class Driver extends BaseDriver {
       this.helper = {
         toolbarButton() {
           return geckodriver.wait(until.elementLocated(
-            By.id(`${EXTENSION_TOOL_BAR_ID}`)
+            By.id(`${firefox_extension_bar_id}`)
           ), 10000);
         },
         getHandles() {

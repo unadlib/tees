@@ -139,6 +139,16 @@ class Query extends BaseQuery {
     }
   }
 
+  async waitForClosingLatestWindow() {
+    const handles = await this._node.getAllWindowHandles();
+    await this._node.wait(async() => {
+      const currentHandles = await this._node.getAllWindowHandles();
+      while (handles.length - currentHandles.length === 1 ) {
+        return true;
+      }
+    }, 15000);
+  }
+
   async screenshot({
     path
   } = {}) {
