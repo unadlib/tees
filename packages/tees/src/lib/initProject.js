@@ -11,7 +11,7 @@ function compile({
   return renderTemplate(...values);
 }
 
-function ensureDirSync (dirPath) {
+function mkDirSync (dirPath) {
   try {
     fs.mkdirSync(dirPath, { recursive: true })
   } catch (err) {
@@ -43,26 +43,26 @@ async function getPromptAnswers() {
     return answers;
 }
 
-async function run(projectName,  cmd) {
-    ensureDirSync(path.join(process.cwd(), projectName));
-    ensureDirSync(path.join(process.cwd(), `${projectName}/src`));
-    fs.readFile(path.join(__dirname, './e2eConfigTemplate.js'), 'utf-8', async (err, data) => {
-      template = data.toString();
+async function initProject(projectName,  cmd) {
+    mkDirSync(path.join(process.cwd(), projectName));
+    mkDirSync(path.join(process.cwd(), `${projectName}/src`));
+    fs.readFile(path.join(__dirname, '../../templates/e2eConfig.js'), 'utf-8', async (err, data) => {
+      if (err) throw err;
       const configObj = {
         projectName
       }
       const result = compile({
-        template,
+        template: data.toString(),
         keys: Object.keys(configObj),
         values: Object.values(configObj),
       });
       fs.writeFile(path.join(process.cwd(), `${projectName}/e2e.config.js`), result, 'ascii', (err) => {
-        if (err) throw new Error(err);
+        if (err) throw err;
       });
     });
 
-    fs.readFile(path.join(__dirname, './packageTemplate.js'), 'utf-8', async (err, data) => {
-      template = data.toString();
+    fs.readFile(path.join(__dirname, '../../templates/package.json'), 'utf-8', async (err, data) => {
+      if (err) throw err;
       const promptAnswers = await getPromptAnswers();
       const packageObj = {
         projectName,
@@ -72,17 +72,17 @@ async function run(projectName,  cmd) {
       }
       
       const result = compile({
-        template,
+        template: data.toString(),
         keys: Object.keys(packageObj),
         values: Object.values(packageObj),
       });
       fs.writeFile(path.join(process.cwd(), `${projectName}/package.json`), result, 'ascii', (err) => {
-        if (err) throw new Error(err);
+        if (err) throw err;
       });
     });
 }
 
 
 module.exports = {
-  run,
+  initProject,
 };
