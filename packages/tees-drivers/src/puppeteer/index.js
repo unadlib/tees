@@ -55,7 +55,7 @@ class Query extends BaseQuery {
     return attributeValue;
   }
 
-  async getProperty(selector, property, options) {
+  async getProperty(selector, property, options = {}) {
     const element = await this.waitForSelector(selector, options);
     const value = await this._node.evaluate(
       (element, property) => element[property],
@@ -64,7 +64,7 @@ class Query extends BaseQuery {
     return value;
   }
 
-  async getValue(selector, options) {
+  async getValue(selector, options = {}) {
     const value = await this.getProperty(selector, 'value', options);
     return value;
   }
@@ -80,18 +80,18 @@ class Query extends BaseQuery {
     return this._node.url();
   }
 
-  async click(selector, options) {
+  async click(selector, options = {}) {
     await this.waitForSelector(selector, options);
     const _selector = this.getSelector(selector, options);
     await this._node.click(_selector, options);
   }
 
-  async type(selector, value, options) {
+  async type(selector, value, options = {}) {
     const _selector = this.getSelector(selector, options);
     await this._node.type(_selector, value, options);
   }
 
-  async waitForSelector(selector, options) {
+  async waitForSelector(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     if (!this._node.waitForSelector) return;
     const element = await this._node.waitForSelector(_selector, options);
@@ -135,7 +135,7 @@ class Query extends BaseQuery {
     await this._node.reload();
   }
 
-  async clear(selector, options) {
+  async clear(selector, options = {}) {
     await this.waitForSelector(selector, options);
     const _selector = this.getSelector(selector, options);
     await this._node.focus(_selector);
@@ -150,7 +150,7 @@ class Query extends BaseQuery {
     }
   }
 
-  async $(selector, options) {
+  async $(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     const element = await this._node.$(_selector);
     return element;
@@ -160,10 +160,14 @@ class Query extends BaseQuery {
    * To find an element in html page
    * @param {*} selector: css selector like syntax
    */
-  async $$(selector, options) {
+  async $$(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     const elements = await this._node.$$(_selector);
     return elements;
+  }
+
+  async closePage(options = {}){
+    await this._node.close(options);
   }
 }
 
