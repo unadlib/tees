@@ -4,7 +4,7 @@
   "description": "${description}",
   "main": "${mainFile}",
   "scripts": {
-    "testExample": "tees run ./src/example.js --params '' -D -S --testerCLI '--clearCache' --drivers puppeteer",
+    "testExample": "npx tees run ./src/example.js -D puppeteer -S"
   },
   "dependencies": {
     "tees": "${teesVersion}"
