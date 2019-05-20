@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
+const chalk = require('chalk');
 
 function compile({
   keys,
@@ -9,15 +10,6 @@ function compile({
 }) {
   const renderTemplate = new Function(...keys, `return \`${template}\``);
   return renderTemplate(...values);
-}
-
-function mkDirSync (dirPath) {
-  try {
-    fs.mkdirSync(dirPath, { recursive: true })
-  } catch (err) {
-    if (err.code !== 'EEXIST') throw err;
-    console.log('Dir exist!');
-  }
 }
 
 async function getPromptAnswers() {
@@ -44,44 +36,42 @@ async function getPromptAnswers() {
 }
 
 async function initProject(projectName) {
-    mkDirSync(path.join(process.cwd(), projectName));
-    mkDirSync(path.join(process.cwd(), `${projectName}/src`));
-    fs.readFile(path.join(__dirname, '../../templates/e2eConfig.js'), 'utf-8', (err, data) => {
-      if (err) throw err;
-      const configObj = {
-        projectName
-      }
-      const result = compile({
-        template: data.toString(),
-        keys: Object.keys(configObj),
-        values: Object.values(configObj),
-      });
-      fs.writeFile(path.join(process.cwd(), `${projectName}/e2e.config.js`), result, 'ascii', (err) => {
-        if (err) throw err;
-      });
-    });
+  try {
+    const directoryExist = fs.existsSync(path.join(process.cwd(), projectName));
+    if (directoryExist) throw chalk.red('directory exist!');
+    fs.mkdirSync(path.join(process.cwd(), projectName));
+    fs.mkdirSync(path.join(process.cwd(), `${projectName}/src`));
 
-    fs.readFile(path.join(__dirname, '../../templates/package.json'), 'utf-8', async (err, data) => {
-      if (err) throw err;
-      const promptAnswers = await getPromptAnswers();
-      const packageObj = {
-        projectName,
-        mainFile : 'index.js',
-        teesVersion : "^1.0.0-alpha.31",
-        ...promptAnswers
-      }
-      
-      const result = compile({
-        template: data.toString(),
-        keys: Object.keys(packageObj),
-        values: Object.values(packageObj),
-      });
-      fs.writeFile(path.join(process.cwd(), `${projectName}/packageJson.js`), result, 'ascii', (err) => {
-        if (err) throw err;
-      });
+    const e2eConfigTemplate = fs.readFileSync(path.join(__dirname, '../../templates/e2eConfig.js'), 'utf-8').toString();
+    const configObj = {
+      projectName
+    }
+    const e2eConfigResult = compile({
+      template: e2eConfigTemplate,
+      keys: Object.keys(configObj),
+      values: Object.values(configObj),
     });
+    fs.writeFileSync(path.join(process.cwd(), `${projectName}/e2e.config.js`), e2eConfigResult, 'ascii');
+
+    const packageTemplate = fs.readFileSync(path.join(__dirname, '../../templates/packageJson.js'), 'utf-8').toString();
+    const promptAnswers = await getPromptAnswers();
+    const packageObj = {
+      projectName,
+      mainFile : 'index.js',
+      teesVersion : "latest",
+      ...promptAnswers
+    }
+    const result = compile({
+      template: packageTemplate,
+      keys: Object.keys(packageObj),
+      values: Object.values(packageObj),
+    });
+    fs.writeFileSync(path.join(process.cwd(), `${projectName}/package.json`), result, 'ascii');
+    console.log(chalk.green('Init project successfully!'));
+  } catch (error) {
+    throw error;
+  }
 }
-
 
 module.exports = {
   initProject,
