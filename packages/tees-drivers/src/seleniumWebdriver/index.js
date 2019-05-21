@@ -237,13 +237,11 @@ module.exports = (browser) => {
     async run({ configSetting, type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
       this._isHeadless = isHeadless;
       let _setting = this._options.driver.setting;
-      console.log(this._isHeadless, '_isHeadless');
       const isExtension = type === 'extension';
       const extensionPath = path.resolve(process.cwd(), extension);
       if (this._isHeadless) {
         _setting = seleniumWebdriverSetting[`${webdriver}Headless`] || _setting;
       } else {
-        console.log(webdriver);
         _setting = seleniumWebdriverSetting[`${webdriver}`]
       }
       if(webdriver ==='chrome' || webdriver === 'firefox') {
