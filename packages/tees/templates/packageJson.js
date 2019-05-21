@@ -4,7 +4,7 @@
   "description": "${description}",
   "main": "${mainFile}",
   "scripts": {
-    "test": "npx tees run ./src/example.js -D puppeteer -S"
+    "test": "npx tees run ./src/example.spec.js -D puppeteer -S"
   },
   "dependencies": {
     "tees": "${teesVersion}"
