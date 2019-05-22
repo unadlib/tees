@@ -22,12 +22,12 @@ class Query extends BaseQuery {
     return attributeValue;
   }
 
-  async getValue(selector, options) {
+  async getValue(selector, options = {}) {
     const value = await this.getAttribute(selector, 'value', options);
     return value;
   }
 
-  async html(selector, options) {
+  async html(selector, options = {}) {
     const element = await this.$(selector, options);
     return element.html();
   }
@@ -37,11 +37,11 @@ class Query extends BaseQuery {
     element.simulate('click');
   }
 
-  async clear(selector, options) {
+  async clear(selector, options = {}) {
     await this.type(selector, '', options);
   }
 
-  async type(selector, value, options) {
+  async type(selector, value, options = {}) {
     const element = await this.$(selector, options);
     element.instance().value = value;
     element.simulate('change');
@@ -67,7 +67,7 @@ class Query extends BaseQuery {
     await this.waitForFunction(...args);
   }
 
-  async waitForSelector(selector, options) {
+  async waitForSelector(selector, options = {}) {
     await this.waitFor(100);
     this._node.update();
     const _selector = this.getSelector(selector, options);
@@ -78,12 +78,12 @@ class Query extends BaseQuery {
     return this._node.find(_selector).first();
   }
 
-  async $(selector, options) {
+  async $(selector, options = {}) {
     const element = await this.$$(selector, options);
     return element.first();
   }
 
-  async $$(selector, options) {
+  async $$(selector, options = {}) {
     let _selector = this.getSelector(selector, options);
     // TODO support full child selector with index.
     let index;
@@ -100,6 +100,9 @@ class Query extends BaseQuery {
     }
     const element = this._node.find(_selector);
     return index ? element.at(index) : element;
+  }
+  async closePage(options = {}) {
+    
   }
 }
 

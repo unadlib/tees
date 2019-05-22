@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const {
   Builder,
   By,
@@ -14,6 +15,19 @@ const {
   Query: BaseQuery
 } = require('../base');
 
+const capabilities = {
+  acceptSslCerts: true,
+  acceptInsecureCerts: true,
+  args: [
+    '--use-fake-ui-for-media-stream',
+    '--use-fake-device-for-media-stream',
+    '--use-file-for-fake-audio-capture',
+    '--allow-silent-push',
+    '--disable-setuid-sandbox',
+    '--no-sandbox',
+    '--disable-gpu'
+  ]
+};
 
 const Browsers = {
   chrome: 'chrome',
@@ -35,12 +49,12 @@ const seleniumWebdriverSetting = {
 
 class Query extends BaseQuery {
   
-  async getText(selector, options) {
+  async getText(selector, options = {}) {
     const [ text ] = await this.getTexts(selector, options) || [];
     return text;
   }
 
-  async getTexts(selector, options) {
+  async getTexts(selector, options = {}) {
     const elements = await this.$$(selector, options);
     let innerTexts = [];
     for(const ele of elements) {
@@ -56,12 +70,12 @@ class Query extends BaseQuery {
     return attributeValue;
   }
 
-  async getProperty(selector, property, options) {
+  async getProperty(selector, property, options = {}) {
     const propertyValue = await this.getAttribute(selector, property, options);
     return propertyValue;
   }
 
-  async getValue(selector, options) {
+  async getValue(selector, options = {}) {
     const value = this.getAttribute(selector, 'value', options);
     return value;
   }
@@ -71,12 +85,12 @@ class Query extends BaseQuery {
     return html;
   }
 
-  async click(selector, options) {
+  async click(selector, options = {}) {
     const element = await this._getElement(selector, options);
     await element.click();
   }
 
-  async type(selector, value, options) {
+  async type(selector, value, options = {}) {
     const element = await this._getElement(selector, options);
     if (options && options.delay) {
       for (const char of value) {
@@ -88,7 +102,7 @@ class Query extends BaseQuery {
     }
   }
 
-  async waitForSelector(selector, options) {
+  async waitForSelector(selector, options = {}) {
     const element = await this._getElement(selector, options);
     return element;
   }
@@ -102,6 +116,7 @@ class Query extends BaseQuery {
   }
 
   async getNewOpenPage() {
+    await this.waitFor(3000);
     const handles = await this._node.getAllWindowHandles();
     await this._node.switchTo().window(handles[handles.length - 1]);
     return this._node;
@@ -122,6 +137,16 @@ class Query extends BaseQuery {
     } else {
       await this._node.switchTo().window(handles[handles.length - 1]);
     }
+  }
+
+  async waitForClosingLatestWindow() {
+    const handles = await this._node.getAllWindowHandles();
+    await this._node.wait(async() => {
+      const currentHandles = await this._node.getAllWindowHandles();
+      while (handles.length - currentHandles.length === 1 ) {
+        return true;
+      }
+    }, 15000);
   }
 
   async screenshot({
@@ -160,13 +185,14 @@ class Query extends BaseQuery {
     await this._node.refresh();
   }
 
-  async clear(selector, options) {
+  async clear(selector, options = {}) {
     const element = await this._getElement(selector, options);
-    // element.clear();
-    const text = await element.getAttribute("value");
-    for(let i=0; i < text.length; i++) {
-      element.sendKeys('\uE003');
-    }
+    element.clear();
+    // const text = await element.getAttribute("value");
+    // console.log(text.length,'length');
+    // for(let i=0; i < text.length; i++) {
+    //   element.sendKeys('\uE003');
+    // }
   }
 
   async waitForFunction(...args) {
@@ -176,25 +202,28 @@ class Query extends BaseQuery {
     await this.waitForFunction(...args);
   }
 
-  async _getElement(selector, options) {
+  async _getElement(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     const element = await this._node.wait(until.elementLocated(By.css(_selector)));
     return element;
   }
 
-  async $(selector, options) {
+  async $(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     const element = this._node.findElement(By.css(_selector));
     return element;
   }
 
-  async $$(selector, options) {
+  async $$(selector, options = {}) {
     const _selector = this.getSelector(selector, options);
     const elements = this._node.findElements(By.css(_selector));
     return elements;
   }
-}
 
+  async closePage(options = {}){
+    await this._node.close();
+  }
+}
 
 module.exports = (browser) => {
   const webdriver = browser.toLowerCase();
@@ -205,25 +234,61 @@ module.exports = (browser) => {
       super(options, program);
     }
 
-    async run({ isHeadless } = {}) {
+    async run({ configSetting, type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
       this._isHeadless = isHeadless;
+      let _setting = this._options.driver.setting;
+      const isExtension = type === 'extension';
+      const extensionPath = path.resolve(process.cwd(), extension);
+      if (this._isHeadless) {
+        _setting = seleniumWebdriverSetting[`${webdriver}Headless`] || _setting;
+      } else {
+        _setting = seleniumWebdriverSetting[`${webdriver}`]
+      }
+      if(webdriver ==='chrome' || webdriver === 'firefox') {
+        _setting.windowSize(configSetting.defaultViewport || {width: 1000, height: 800});
+        const capabilitiesArgs = [
+          ...capabilities && capabilities.args || '',
+          ...configSetting && configSetting.args || ''
+        ];
+        _setting.addArguments(capabilitiesArgs);
+        if(isExtension) {
+          if(this._isHeadless) {
+            console.error('Headless mode is not supported by extension!!!');
+            return;
+          }
+          if(webdriver !== 'chrome') {
+            console.error('firefox is not supported by extension!!!,you can use firefox-extension');
+            return;
+          }
+          _setting.addArguments([
+            `--disable-extensions-except=${extensionPath}`,
+            `--load-extension=${extensionPath}`
+          ])
+        }
+        if(!!userDataDir) {
+          _setting.addArguments([
+            `--user-data-dir=${userDataDir}`
+          ])
+        }
+      }
+
+      const mergeCapabilities = {
+      ...capabilities,
+      ...configSetting,
+      browserName: webdriver,
+    }
+
+    this._browser = this._program
+        .forBrowser(Browsers[webdriver])[setKeyName]( 
+          _setting
+        )
+        .withCapabilities(
+          mergeCapabilities
+        )
+        .build();
     }
 
     async newPage() {
-      let _setting = this._options.driver.setting;
-      if (this._isHeadless) {
-        _setting = seleniumWebdriverSetting[`${webdriver}Headless`] || _setting;
-      }
-      this._browser = this._program
-        .forBrowser(Browsers[webdriver])[setKeyName](
-          _setting
-        )
-        .withCapabilities({
-          browserName: webdriver,
-          acceptSslCerts: true,
-          acceptInsecureCerts: true
-        })
-        .build();
       this._page = this._browser;
     }
 

@@ -1,3 +1,4 @@
+const path = require('path');
 const { lstatSync } = require('fs');
 const { getWorkAbsolutePath } = require('../utils/path');
 
@@ -18,12 +19,13 @@ function isDirectory(testPath) {
 
 function getTestMatch(paths) {
   if (paths.length > 0) {
-    const testMatch = paths.map((path) => {
-      const testPath = getWorkAbsolutePath(path);
+    const testMatch = paths.map((fromPath) => {
+      const testPath = getWorkAbsolutePath(fromPath);
       if (isDirectory(testPath)) {
-        path = `${path}/**/*.js`;
+        fromPath = `${fromPath}/**/*.js`;
       }
-      return `${DEFAULT_ROOT}/${path.replace(/^\.\//, '')}`;
+
+      return path.join(DEFAULT_ROOT, path.relative(process.cwd(), testPath));
     });
     return testMatch;
   }
