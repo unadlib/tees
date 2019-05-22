@@ -20,8 +20,8 @@
     "geckodriver": "^1.16.1",
     "get-port": "^5.0.0",
     "puppeteer": "^1.7.0",
-    "selenium-webdriver": "webexts/selenium#nodejs",
-    "web-ext": "denar90/web-ext#build-args-feature",
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "web-ext": "^3.0.0",
     "webextensions-geckodriver": "^0.5.1"
   }
 }
