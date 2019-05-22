@@ -1,6 +1,6 @@
 {
   "name": "tees-drivers",
-  "version": "1.0.0-alpha.39",
+  "version": "1.0.0-alpha.40",
   "description": "Tees Drivers",
   "repository": {
     "type": "git",
@@ -16,10 +16,10 @@
     "geckodriver": "^1.16.1",
     "get-port": "^5.0.0",
     "puppeteer": "^1.7.0",
-    "selenium-webdriver": "^4.0.0-alpha.1",
-    "web-ext": "^3.0.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "web-ext": "^3.0.0",
     "webextensions-geckodriver": "^0.5.1"
   }
 }
