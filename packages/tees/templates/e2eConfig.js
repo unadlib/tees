@@ -1,4 +1,5 @@
 module.exports = {
+  selectorLabel: 'class',
   params: {
     projects: {
       '${projectName}': {
