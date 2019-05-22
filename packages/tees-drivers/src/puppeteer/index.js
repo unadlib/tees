@@ -92,8 +92,7 @@ class Query extends BaseQuery {
   }
 
   async waitForSelector(selector, options = {}) {
-    const _selector = this.getSelector(selector, options);
-    if (!this._node.waitForSelector) return;
+    const _selector = this.getSelector(selector);
     const element = await this._node.waitForSelector(_selector, options);
     return element;
   }
