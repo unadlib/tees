@@ -53,6 +53,11 @@ async function initProject(projectName) {
     });
     fs.writeFileSync(path.join(process.cwd(), `${projectName}/e2e.config.js`), e2eConfigResult, 'ascii');
 
+
+    const exampleSpecFile = fs.readFileSync(path.join(__dirname, '../../templates/exampleSpec.js'), 'utf-8').toString();
+    fs.writeFileSync(path.join(process.cwd(), `${projectName}/src/example.spec.js`), exampleSpecFile, 'ascii');
+
+
     const packageTemplate = fs.readFileSync(path.join(__dirname, '../../templates/packageJson.js'), 'utf-8').toString();
     const promptAnswers = await getPromptAnswers();
     const packageObj = {

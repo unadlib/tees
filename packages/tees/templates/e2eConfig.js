@@ -1,7 +1,10 @@
 module.exports = {
   params: {
     projects: {
-      '${projectName}': {}
+      '${projectName}': {
+        type: 'uri',
+        location: 'https://cn.bing.com/',
+      }
     }
   },
   lookupConfig({
