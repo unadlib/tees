@@ -5,6 +5,8 @@
 
 ## [Unreleased]
 
+## [1.0.0-alpha.44] - 2019-05-23 [YANKED]
+
 ## [1.0.0-alpha.42] - 2019-05-22 [YANKED]
 
 ## [1.0.0-alpha.41] - 2019-05-22 [YANKED]
@@ -58,7 +60,8 @@
 ## [1.0.0-alpha.16] - 2019-02-28 [YANKED]
 
 ## 1.0.0-alpha.15 - 2019-02-28
-[unreleased]: https://github.com/unadlib/tees/compare/v1.0.0-alpha.42...HEAD
+[unreleased]: https://github.com/unadlib/tees/compare/v1.0.0-alpha.44...HEAD
+[1.0.0-alpha.44]: https://github.com/unadlib/tees/compare/v1.0.0-alpha.42...v1.0.0-alpha.44
 [1.0.0-alpha.42]: https://github.com/unadlib/tees/compare/v1.0.0-alpha.41...v1.0.0-alpha.42
 [1.0.0-alpha.41]: https://github.com/summergan/tees/compare/v1.0.0-alpha.40...v1.0.0-alpha.41
 [1.0.0-alpha.40]: https://github.com/unadlib/tees/compare/v1.0.0-alpha.39...v1.0.0-alpha.40
