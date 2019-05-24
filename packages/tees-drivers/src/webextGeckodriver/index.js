@@ -209,7 +209,8 @@ class Driver extends BaseDriver {
     super(options, program);
   }
 
-  async run({configSetting, type, extension='', firefox_extension_bar_id= '', isHeadless } = {}) {
+  async run({configSetting, type, extension='', firefox_extension_bar_id= '', extname= '', isHeadless } = {}) {
+  
     const isExtension = type === 'extension';
     let _setting = new firefox.Options();
     _setting.windowSize(configSetting.defaultViewport || {width: 1000, height: 800});
@@ -248,7 +249,12 @@ class Driver extends BaseDriver {
 
       const manifestPath = path.resolve(process.cwd(), `${extDir}/manifest.json`);
       let geckodriver;
-      const webExtension = await webExtensionsGeckoDriver(manifestPath, _setting);
+      let driverOptions;
+      driverOptions = Object.assign({
+        fxOptions: _setting,
+        target: extname
+      }, driverOptions) ; 
+      const webExtension = await webExtensionsGeckoDriver(manifestPath, driverOptions);
       geckodriver = webExtension.geckodriver;
       this.helper = {
         toolbarButton() {
