@@ -175,7 +175,11 @@ class Driver extends BaseDriver {
     super(options, program);
   }
 
-  async run({ configSetting, type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
+  async run({ configSetting, type, extension = '',executablePath = '' , userDataDir = '', isAuth, isHeadless } = {}) {
+    if (typeof(isAuth) == "undefined") {
+      executablePath= '';
+      userDataDir= ''
+    }
     this._isHeadless = isHeadless;
     const isExtension = type === 'extension';
     const extensionPath = path.resolve(process.cwd(), extension);
