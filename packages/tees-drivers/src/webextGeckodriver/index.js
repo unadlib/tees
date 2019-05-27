@@ -210,7 +210,6 @@ class Driver extends BaseDriver {
   }
 
   async run({configSetting, type, extension='', firefox_extension_bar_id= '', extname= '', isHeadless } = {}) {
-  
     const isExtension = type === 'extension';
     let _setting = new firefox.Options();
     _setting.windowSize(configSetting.defaultViewport || {width: 1000, height: 800});

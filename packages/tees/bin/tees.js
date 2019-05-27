@@ -4,6 +4,7 @@ const commander = require('commander');
 const info = require('../package');
 const { run } = require('../src/run');
 const { create, update, mkdir } = require('../src/lib/fetchCase');
+const { initProject } = require('../src/lib/initProject');
 const split = require('../src/utils/split');
 const { modes } = require('../src/lib/modes');
 
@@ -51,6 +52,13 @@ commander
   .option('-S, --service <service>', '')
   .option('-O, --origin <origin>', '')
   .action(mkdir);
+
+commander
+  .command('init')
+  .description('Init a new E2E project.')
+  .arguments('<project-directory>')
+  .usage('<command> [options]')
+  .action(initProject)
 
 commander.parse(process.argv);
 
