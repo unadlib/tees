@@ -16,6 +16,20 @@ const {
   Query: BaseQuery
 } = require('../base');
 
+const capabilities = {
+  acceptSslCerts: true,
+  acceptInsecureCerts: true,
+  args: [
+    '--use-fake-ui-for-media-stream',
+    '--use-fake-device-for-media-stream',
+    '--use-file-for-fake-audio-capture',
+    '--allow-silent-push',
+    '--disable-setuid-sandbox',
+    '--no-sandbox',
+    '--disable-gpu'
+  ]
+};
+
 class Query extends BaseQuery {
   async getText(selector, options = {}) {
     const [ text ] = await this.getTexts(selector, options) || [];
@@ -105,8 +119,7 @@ class Query extends BaseQuery {
     } 
   }
 
-  async waitForClosingLatestWindow() {
-    const handles = await this._node.getAllWindowHandles();
+  async waitForClosingLatestWindow(handles) {
     await this._node.wait(async() => {
       const currentHandles = await this._node.getAllWindowHandles();
       while (handles.length - currentHandles.length === 1 ) {
@@ -196,11 +209,19 @@ class Driver extends BaseDriver {
     super(options, program);
   }
 
-  async run({type, extension='', firefox_extension_bar_id= '', isHeadless } = {}) {
+  async run({configSetting, type, extension='', firefox_extension_bar_id= '', extname= '', isHeadless } = {}) {
     const isExtension = type === 'extension';
+    let _setting = new firefox.Options();
+    _setting.windowSize(configSetting.defaultViewport || {width: 1000, height: 800});
+    const capabilitiesArgs = [
+      ...capabilities && capabilities.args || '',
+      ...configSetting && configSetting.args || ''
+    ];
+    
     if (isExtension && extension!='') {
       const extDir = extension.split('.xpi')[0];
       const extensionPath = path.resolve(process.cwd(), extDir);
+      _setting.addArguments(capabilitiesArgs);
       if (await fs_extra.pathExistsSync(extensionPath)) {
         await fs_extra.remove(extensionPath)
           .then(() => {
@@ -227,7 +248,12 @@ class Driver extends BaseDriver {
 
       const manifestPath = path.resolve(process.cwd(), `${extDir}/manifest.json`);
       let geckodriver;
-      const webExtension = await webExtensionsGeckoDriver(manifestPath);
+      let driverOptions;
+      driverOptions = Object.assign({
+        fxOptions: _setting,
+        target: extname
+      }, driverOptions) ; 
+      const webExtension = await webExtensionsGeckoDriver(manifestPath, driverOptions);
       geckodriver = webExtension.geckodriver;
       this.helper = {
         toolbarButton() {
