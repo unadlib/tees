@@ -97,6 +97,10 @@ class Query extends BaseQuery {
     await this._node.get(url);
   }
 
+  async getAllWindowHandles() {
+    return  await this._node.getAllWindowHandles();
+  }
+
   async getNewOpenPage() {
     await this.waitFor(3000);
     const handles = await this._node.getAllWindowHandles();
