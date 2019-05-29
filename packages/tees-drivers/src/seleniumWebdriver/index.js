@@ -37,7 +37,7 @@ const Browsers = {
   safari: 'safari',
 };
 
-const seleniumWebdriverSetting = {
+const seleniumWebdriverOptions = {
   safari: new safari.Options(),
   chromeHeadless: new chrome.Options().headless(),
   chrome: new chrome.Options(),
@@ -228,29 +228,38 @@ class Query extends BaseQuery {
 module.exports = (browser) => {
   const webdriver = browser.toLowerCase();
   const setKeyName = `set${browser}Options`;
-  const setting = seleniumWebdriverSetting[webdriver];
+  const setting = seleniumWebdriverOptions[webdriver];
   class Driver extends BaseDriver {
     constructor(options = {}, program = new Builder()) {
       super(options, program);
     }
 
-    async run({ configSetting, type, extension = '',executablePath = '' , userDataDir = '', isHeadless } = {}) {
+    async run({ configSetting, type, extension = '', executablePath = '' , userDataDir = '', isHeadless } = {}) {
       this._isHeadless = isHeadless;
-      let _setting = this._options.driver.setting;
+      let _options = this._options.driver.setting;
       const isExtension = type === 'extension';
       const extensionPath = path.resolve(process.cwd(), extension);
-      if (this._isHeadless) {
-        _setting = seleniumWebdriverSetting[`${webdriver}Headless`] || _setting;
+      if(this._isHeadless) {
+        _options = seleniumWebdriverOptions[`${webdriver}Headless`] || _options;
       } else {
-        _setting = seleniumWebdriverSetting[`${webdriver}`]
+        _options = seleniumWebdriverOptions[`${webdriver}`]
+      }
+      if(executablePath !== '') {
+        executablePath = path.resolve(process.cwd(), executablePath);
+        if(webdriver ==='chrome') {
+          _options.setChromeBinaryPath(executablePath)
+        } 
+        if (webdriver ==='firefox') {
+          _options.setBinary(executablePath);
+        }
       }
       if(webdriver ==='chrome' || webdriver === 'firefox') {
-        _setting.windowSize(configSetting.defaultViewport || {width: 1000, height: 800});
+        _options.windowSize(configSetting.defaultViewport || {width: 1000, height: 800});
         const capabilitiesArgs = [
           ...capabilities && capabilities.args || '',
           ...configSetting && configSetting.args || ''
         ];
-        _setting.addArguments(capabilitiesArgs);
+        _options.addArguments(capabilitiesArgs);
         if(isExtension) {
           if(this._isHeadless) {
             console.error('Headless mode is not supported by extension!!!');
@@ -260,13 +269,13 @@ module.exports = (browser) => {
             console.error('firefox is not supported by extension!!!,you can use firefox-extension');
             return;
           }
-          _setting.addArguments([
+          _options.addArguments([
             `--disable-extensions-except=${extensionPath}`,
             `--load-extension=${extensionPath}`
           ])
         }
         if(!!userDataDir) {
-          _setting.addArguments([
+          _options.addArguments([
             `--user-data-dir=${userDataDir}`
           ])
         }
@@ -280,7 +289,7 @@ module.exports = (browser) => {
 
     this._browser = this._program
         .forBrowser(Browsers[webdriver])[setKeyName]( 
-          _setting
+          _options
         )
         .withCapabilities(
           mergeCapabilities
