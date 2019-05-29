@@ -94,16 +94,22 @@ class WebDriverEnvironment {
       // TODO sandbox mode
     } else {
       const drivers = {};
+      const configSetting = this._config.globals.execGlobal && this._config.globals.execGlobal.exec && this._config.globals.execGlobal.exec.driver && this._config.globals.execGlobal.exec.driver.setting || {};
+      const type = this._config.globals.execGlobal && this._config.globals.execGlobal.exec && this._config.globals.execGlobal.exec.type || '';
+      const extension = this._config.globals.execGlobal && this._config.globals.execGlobal.exec && this._config.globals.execGlobal.exec.extension || '';
+      const executablePath = this._config.globals.execGlobal && this._config.globals.execGlobal.exec && this._config.globals.execGlobal.exec.executablePath || '';
+      const userDataDir = this._config.globals.execGlobal && this._config.globals.execGlobal.exec && this._config.globals.execGlobal.exec.userDataDir || '';
+      const mergeConfig = {configSetting: configSetting, type: type, extension: extension, executablePath: executablePath, userDataDir: userDataDir};
       for (const item of this._config.globals.execDrivers) {
         const [name, execSetting = {}] = Array.isArray(item) ? item : [item];
         // TODO import browsers setting
         const defaultSetting = this._config.globals.execDefaults.browsers[name];
         const instance = createDriver(name, {
-          ...defaultSetting,
-          ...execSetting,
+          // ...defaultSetting,
+          // ...execSetting,
           selectorLabel: this._config.globals.execGlobal.selectorLabel
         });
-        await instance.driver.run({ isHeadless });
+        await instance.driver.run({ ...mergeConfig, isHeadless });
         await instance.driver.newPage();
         drivers[name] = instance;
       }
