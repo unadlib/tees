@@ -29,3 +29,4 @@ describe('lib/fileMatch', () => {
     expect(defaultTestMatch).toEqual(["<rootDir>/**/?(*.)+(spec|test).js?(x)"]);
   });
 });
+
