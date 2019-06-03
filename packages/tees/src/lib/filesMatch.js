@@ -22,7 +22,7 @@ function getTestMatch(paths) {
     const testMatch = paths.map((fromPath) => {
       const testPath = getWorkAbsolutePath(fromPath);
       if (isDirectory(testPath)) {
-        fromPath = `${fromPath}/**/*.js`;
+        return fromPath = `${fromPath}/**/*.js`;
       }
 
       return path.join(DEFAULT_ROOT, path.relative(process.cwd(), testPath));
