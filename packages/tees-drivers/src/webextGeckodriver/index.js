@@ -2,6 +2,7 @@ const path = require('path');
 const assert = require('assert');
 const fs = require('fs');
 const fs_extra = require('fs-extra');
+const admZip = require('adm-zip');
 const { exec } = require('child_process');
 
 const webExtensionsGeckoDriver = require('webextensions-geckodriver');
@@ -240,15 +241,9 @@ class Driver extends BaseDriver {
           }).catch((err) => {
             console.error(err);
           });
-        
-      await exec(`unzip -o ${extension} -d ${extensionPath}`, { maxBuffer: 1024 * 500 }, (err, stdout, stderr) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          console.log(`stdout: ${stdout}`);
-          console.log(`stderr: ${stderr}`);
-        });
+       
+        const zip = new admZip(extension);
+        await zip.extractAllTo(extDir, true);
 
       const manifestPath = path.resolve(process.cwd(), `${extDir}/manifest.json`);
       let geckodriver;
