@@ -21,6 +21,6 @@
     "react-dom": "^16.7.0",
     "selenium-webdriver": "^4.0.0-alpha.1",
     "web-ext": "^3.0.0",
-    "webextensions-geckodriver": "^0.5.1"
+    "webextensions-geckodriver": "^0.6.0"
   }
 }
