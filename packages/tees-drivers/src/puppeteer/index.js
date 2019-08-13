@@ -105,7 +105,7 @@ class Query extends BaseQuery {
         const { name, id } = document.querySelector(frameSelector);
         return name || id;
       }, frameSelector);
-      if (name !== "") {
+      if (name !== '') {
         frame = this._node.frames().find(frame => frame.name() === name);
       } else {
         const url = await frame.$eval(frameSelector, frame => frame.getAttribute('src'));
