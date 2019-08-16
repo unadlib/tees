@@ -85,8 +85,25 @@ function execCase({
     keys: Object.keys(templateMappding),
     values: Object.values(templateMappding),
   });
+  const _option = extendTagOption({
+    option,
+    caseTag,
+    tag
+  });
   const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
-  const tail = ` => (${project} ${groupInfos}on ${driver})`;
+  let _optionTags = Object.entries(_option)
+    .map(
+      ([name, value]) => {
+        if (name === 'loginAccount' || name === 'accounts') {
+          return `${name}-${value}` 
+        } 
+      }
+    );
+    _optionTags = _optionTags.filter(function(t){
+    return t && t.trim();
+  });
+  const _optionInfo = _optionTags.length > 0 ? `& ${_optionTags.join(' & ')} ` : ``;
+  const tail = ` => (${project} ${groupInfos}${_optionInfo}on ${driver})`;
   const caseTitle = `${name}${tail}`;
   const {
     config,
@@ -101,11 +118,6 @@ function execCase({
     driver,
     modes,
     isSandbox,
-  });
-  const _option = extendTagOption({
-    option,
-    caseTag,
-    tag
   });
   const context = {
     logger: generateLogger(caseTitle, global.hasReporter),
