@@ -91,19 +91,16 @@ function execCase({
     tag
   });
   const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
-  let _optionTags = Object.entries(_option)
-    .map(
-      ([name, value]) => {
-        if (name === 'loginAccount' || name === 'accounts') {
-          return `${name}-${value}` 
-        } 
-      }
-    );
-    _optionTags = _optionTags.filter(function(t){
-    return t && t.trim();
-  });
-  const _optionInfo = _optionTags.length > 0 ? `& ${_optionTags.join(' & ')} ` : ``;
-  const tail = ` => (${project} ${groupInfos}${_optionInfo}on ${driver})`;
+  let _optionTags = '';
+  Object.entries(_option)
+  .forEach(
+    ([name, value]) => {
+      if (name === 'loginAccount' || name === 'accounts') {
+        _optionTags =  ` & ${name}-${value}` + _optionTags;
+      } 
+    }
+  );
+  const tail = ` => (${project} ${groupInfos}${_optionTags}on ${driver})`;
   const caseTitle = `${name}${tail}`;
   const {
     config,
