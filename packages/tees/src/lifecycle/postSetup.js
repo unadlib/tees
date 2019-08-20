@@ -26,10 +26,15 @@ jest.setTimeout(global.testTimeout || DEFAULT_TIMEOUT);
  */
 async function beforeEachStart(context, beforeHook) {
   // reset options for each test execution.
-  context.options = JSON.parse(__optionsMapping__.get(context));
+  context.options = this.getOrigialOptions(context);
   if (beforeHook) {
-    await beforeHook(context);
+    await beforeHook(context);          //？
   }
+}
+
+function getOrigialOptions(context) {
+  // reset options for each test execution.
+  return JSON.parse(__optionsMapping__.get(context));
 }
 
 /**
@@ -60,7 +65,7 @@ async function afterEachEnd(context, afterHook) {
  * execute case with case config and exection config.
  * @param {object} params - execution params.
  */
-function execCase({
+function getExecCaseParams({
   driver,
   option,
   title,
@@ -132,8 +137,68 @@ function execCase({
   };
   // cache serialization options for retry.
   __optionsMapping__.set(context, JSON.stringify(context.options));
+
+  return {
+    caseTitle,
+    instance,
+    context,
+    beforeEachCase,
+    afterEachCase,
+  }
+
+}
+
+/**
+ *  global 'test' variable
+ * @param {object} caseParams - case params
+ * @param {function} fn - raw function from test file.
+ * @param {boolean} isOnly - is or not only execution for the current test case.
+ */
+function execCase({
+  driver,
+  option,
+  title,
+  project,
+  group,
+  caseParams,
+  tag,
+  modes,
+  caseTag,
+  isSandbox,
+  isHeadless,
+  isDebugger,
+  isVerbose,
+  isOnly,
+  fn,
+}) {
   /* eslint-disable */
-  const func = (async function ({
+
+  const {
+    caseTitle,
+    instance,
+    context,
+    beforeEachCase,
+    afterEachCase,
+  } = getExecCaseParams({
+    driver,
+    option,
+    title,
+    project,
+    group,
+    caseParams,
+    tag,
+    modes,
+    caseTag,
+    isSandbox,
+    isHeadless,
+    isDebugger,
+    isVerbose,
+    isOnly,
+    fn,
+  })
+
+
+  const func = async function ({
     instance,
     context,
     beforeEachCase,
@@ -143,6 +208,7 @@ function execCase({
     global.__context__ = context;
     global.__beforeEachCase__ = beforeEachCase;
     global.__afterEachCase__ = afterEachCase;
+
     await beforeEachStart(context, beforeEachCase);
     if (!context.options.isUT) {
       if (context.options.isSandbox) {
@@ -153,12 +219,7 @@ function execCase({
       await context.driver.goto(context.options.config);
     }
     await fn(context);
-  }).bind(null, {
-    instance,
-    context,
-    beforeEachCase,
-    afterEachCase,
-  });
+  };
   /* eslint-enable */
   if (isOnly) {
     _test.only(caseTitle, func);
@@ -209,7 +270,7 @@ function testCase(caseParams, fn, isOnly = false) {
           if (isSkipped) {
             break;
           }
-          execCase({
+          global.execCase({
             driver,
             option,
             title,
@@ -244,7 +305,7 @@ function testSkip(...args) {
 }
 
 function testOnly(...args) {
-  return testCase(...args, true);
+  return global.testCase(...args, true);
 }
 
 function testDescribe(...args) {
@@ -259,3 +320,14 @@ global.describe = testDescribe;
 global.describe.skip = _describe.skip;
 global.test.skip = testSkip;
 global.test.only = testOnly;
+
+module.exports = {
+  beforeEachStart,
+  afterEachEnd,
+  getExecCaseParams,
+  execCase,
+  testCase,
+  testSkip,
+  testOnly,
+  testDescribe
+};
