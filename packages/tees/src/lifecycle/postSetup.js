@@ -91,15 +91,16 @@ function execCase({
     tag
   });
   const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
-  let _optionTags = '';
-  Object.entries(_option)
-  .forEach(
-    ([name, value]) => {
-      if (name === 'loginAccount' || name === 'accounts') {
-        _optionTags =  ` & ${name}-${value}` + _optionTags;
-      } 
-    }
-  );
+  const _optionTags = Object.entries(_option)
+  .reduce((tags, [name, value]) => {
+    console.log(tags)
+    const isAccountTag = ['loginAccount', 'accounts'].includes(name);
+    if (!isAccountTag) return tags;
+    return [
+      ...tags,
+      `& ${name}-${value}`
+    ];
+  }, []).join(' ');
   const tail = ` => (${project} ${groupInfos}${_optionTags}on ${driver})`;
   const caseTitle = `${name}${tail}`;
   const {
