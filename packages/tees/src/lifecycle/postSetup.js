@@ -93,7 +93,6 @@ function execCase({
   const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
   const _optionTags = Object.entries(_option)
   .reduce((tags, [name, value]) => {
-    console.log(tags)
     const isAccountTag = ['loginAccount', 'accounts'].includes(name);
     if (!isAccountTag) return tags;
     return [
