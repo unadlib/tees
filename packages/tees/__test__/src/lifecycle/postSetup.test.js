@@ -2,8 +2,8 @@
 global.afterEach = jest.fn()
 
 const accounts = {
-    googleAccount: 'integration.jenkins@gmail.com',
-    googlePwd: 'Rcisfun23',
+    googleAccount: 'username',
+    googlePwd: 'password',
 };
 
 const params = {
@@ -130,8 +130,8 @@ const contextParamExpected = {
             params: {
                 brands: {
                     rc: {
-                        googleAccount: "integration.jenkins@gmail.com",
-                        googlePwd: "Rcisfun23",
+                        googleAccount: "username",
+                        googlePwd: "password",
                         extension: "../../extension/google-rc",
                         location: "chrome-extension://pgjpmeckehbghpkamdammcgmmmbojbdi/client.html"
                     }
