@@ -26,15 +26,10 @@ jest.setTimeout(global.testTimeout || DEFAULT_TIMEOUT);
  */
 async function beforeEachStart(context, beforeHook) {
   // reset options for each test execution.
-  context.options = this.getOrigialOptions(context);
+  context.options = JSON.parse(__optionsMapping__.get(context));
   if (beforeHook) {
-    await beforeHook(context);          //？
+    await beforeHook(context);
   }
-}
-
-function getOrigialOptions(context) {
-  // reset options for each test execution.
-  return JSON.parse(__optionsMapping__.get(context));
 }
 
 /**
@@ -62,7 +57,7 @@ async function afterEachEnd(context, afterHook) {
 }
 
 /**
- * execute case with case config and exection config.
+ * exection config
  * @param {object} params - execution params.
  */
 function getExecCaseParams({
@@ -111,7 +106,7 @@ function getExecCaseParams({
     option,
     caseTag,
     tag
-  });
+  })
   const context = {
     logger: generateLogger(caseTitle, global.hasReporter),
     driver: instance.driver,
@@ -149,10 +144,8 @@ function getExecCaseParams({
 }
 
 /**
- *  global 'test' variable
- * @param {object} caseParams - case params
- * @param {function} fn - raw function from test file.
- * @param {boolean} isOnly - is or not only execution for the current test case.
+ *  execute case with case config and exection config.
+ *  @param {object} params - execution params.
  */
 function execCase({
   driver,
@@ -209,10 +202,11 @@ function execCase({
     global.__beforeEachCase__ = beforeEachCase;
     global.__afterEachCase__ = afterEachCase;
 
-    await beforeEachStart(context, beforeEachCase);
+    await global.beforeEachStart(context, beforeEachCase);
     if (!context.options.isUT) {
       if (context.options.isSandbox) {
         const isAuth = context.options.option.isAuth;
+        console.log('log');
         await context.driver.run({ ...context.options.config, isAuth, isHeadless });
         await context.driver.newPage();
       }
