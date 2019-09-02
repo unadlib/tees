@@ -86,7 +86,7 @@ describe('postSetup unit test :', () => {
 
     });
 
-    it('execCase, ', async () => {
+    it('execCase, if test only should assign the params of global', async () => {
 
         contextParamExpected.isOnly = true;
 
