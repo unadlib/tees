@@ -204,6 +204,7 @@ function execCase({
     await global.beforeEachStart(context, beforeEachCase);
     if (!context.options.isUT) {
       if (context.options.isSandbox) {
+        console.log('222222');
         const isAuth = context.options.option.isAuth;
         await context.driver.run({ ...context.options.config, isAuth, isHeadless });
         await context.driver.newPage();
@@ -302,7 +303,7 @@ function testSkip(...args) {
 }
 
 function testOnly(...args) {
-  return global.testCase(...args, true);
+  return global.test(...args, true);
 }
 
 function testDescribe(...args) {

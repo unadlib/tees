@@ -139,15 +139,15 @@ describe('postSetup unit test :', () => {
     it(`testOnly, return global.testCase `, async () => {
 
         const fn = jest.fn();
-        global.testCase = jest.fn();
+        global.test = jest.fn();
 
         const result = await testOnly(caseParams, fn);
 
-        expect(global.testCase).toBeCalled();
-        expect(global.testCase.mock.calls[0][0]).toBe(caseParams);
-        expect(global.testCase.mock.calls[0][1]).toBe(fn);
-        expect(global.testCase.mock.calls[0][2]).toBe(true);
-        expect(result).toBe(global.testCase(caseParams, fn, true));
+        expect(global.test).toBeCalled();
+        expect(global.test.mock.calls[0][0]).toBe(caseParams);
+        expect(global.test.mock.calls[0][1]).toBe(fn);
+        expect(global.test.mock.calls[0][2]).toBe(true);
+        expect(result).toBe(global.test(caseParams, fn, true));
 
     });
 
