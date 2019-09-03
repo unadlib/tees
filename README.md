@@ -21,20 +21,12 @@
 
 ### Getting Started
 
-1. Install tees using yarn or npm:
-```js
-yarn add tees
-```
-or
-```js
-npm install tees
-```
-2. Initialize tees by cli: 
+1. Initialize tees by cli: 
 ```js
 npx tees init yourProjectName
 ```
-3. Tees will ask you a few questions and will create a basic configuration file and an example file. Press Enter key to choose the default configuration.
-4. Running from the command line:  
+2. Tees will ask you a few questions and will create a basic configuration file and an example file. Press Enter key to choose the default configuration.
+3. Running from the command line:  
 There is a folder "yourProjectName" under the current path:
 ```js
 cd yourProjectName
