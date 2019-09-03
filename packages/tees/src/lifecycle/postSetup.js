@@ -172,7 +172,7 @@ function execCase({
     context,
     beforeEachCase,
     afterEachCase,
-  } = getExecCaseParams({
+  } = global.getExecCaseParams({
     driver,
     option,
     title,
@@ -190,7 +190,6 @@ function execCase({
     fn,
   })
 
-
   const func = async function ({
     instance,
     context,
@@ -206,14 +205,18 @@ function execCase({
     if (!context.options.isUT) {
       if (context.options.isSandbox) {
         const isAuth = context.options.option.isAuth;
-        console.log('log');
         await context.driver.run({ ...context.options.config, isAuth, isHeadless });
         await context.driver.newPage();
       }
       await context.driver.goto(context.options.config);
     }
     await fn(context);
-  };
+  }.bind(null, {
+    instance,
+    context,
+    beforeEachCase,
+    afterEachCase,
+  });
   /* eslint-enable */
   if (isOnly) {
     _test.only(caseTitle, func);
@@ -314,6 +317,9 @@ global.describe = testDescribe;
 global.describe.skip = _describe.skip;
 global.test.skip = testSkip;
 global.test.only = testOnly;
+global.execCase = execCase;
+global.beforeEachStart = beforeEachStart;
+global.getExecCaseParams = getExecCaseParams;
 
 module.exports = {
   beforeEachStart,

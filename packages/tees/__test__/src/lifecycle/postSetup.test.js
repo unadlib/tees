@@ -66,38 +66,53 @@ describe('postSetup unit test :', () => {
 
     it('execCase, verify the params of global and global.beforeEachStart should be called', async () => {
 
+        const result = await getExecCaseParams(context);
+        global.getExecCaseParams = jest.fn().mockReturnValue(result);
+
         global.beforeEachStart = jest.fn();
 
-        instance.driver.run = jest.fn();
-        instance.driver.newPage = jest.fn();
-        instance.driver.goto = jest.fn();
+        result.context.driver.run = jest.fn();
+        result.context.driver.newPage = jest.fn();
+        result.context.driver.goto = jest.fn();
 
         await execCase(context);
 
-        expect(global.$).toEqual(query);
-        expect(global.__context__).toEqual(contextParamExpected);
-        expect(global.__beforeEachCase__).toEqual(global.beforeEachCase);
-        expect(global.__afterEachCase__).toEqual(global.afterEachCase);
+        expect(JSON.stringify(global.$)).toEqual(JSON.stringify(result.instance.query));
+        expect(global.__context__).toEqual(result.context);
+        expect(global.__beforeEachCase__).toEqual(result.beforeEachCase);
+        expect(global.__afterEachCase__).toEqual(result.afterEachCase);
 
         expect(global.beforeEachStart).toBeCalled();
-        expect(global.beforeEachStart).toHaveBeenCalledWith(contextParamExpected, global.beforeEachCase);
+        expect(global.beforeEachStart).toHaveBeenCalledWith(result.context, result.beforeEachCase);
 
-        expect(instance.driver.run).toBeCalled();
+        expect(result.context.driver.run).toBeCalled();
 
     });
 
     it('execCase, if test only should assign the params of global', async () => {
 
-        contextParamExpected.isOnly = true;
-
         context.isOnly = true;
+
+        const result = await getExecCaseParams(context);
+        global.getExecCaseParams = jest.fn().mockReturnValue(result);
+
+        global.beforeEachStart = jest.fn();
+
+        result.context.driver.run = jest.fn();
+        result.context.driver.newPage = jest.fn();
+        result.context.driver.goto = jest.fn();
 
         await execCase(context);
 
-        expect(global.$).toEqual(query);
-        expect(global.__context__).toEqual(contextParamExpected);
-        expect(global.__beforeEachCase__).toEqual(global.beforeEachCase);
-        expect(global.__afterEachCase__).toEqual(global.afterEachCase);
+        expect(JSON.stringify(global.$)).toEqual(JSON.stringify(result.instance.query));
+        expect(global.__context__).toEqual(result.context);
+        expect(global.__beforeEachCase__).toEqual(result.beforeEachCase);
+        expect(global.__afterEachCase__).toEqual(result.afterEachCase);
+
+        expect(global.beforeEachStart).toBeCalled();
+        expect(global.beforeEachStart).toHaveBeenCalledWith(result.context, result.beforeEachCase);
+
+        expect(result.context.driver.run).toBeCalled();
     });
 
     it(`testCase, global.execCase should be called and the param is equal to ${execCaseParamExpected}`, async () => {
@@ -107,7 +122,7 @@ describe('postSetup unit test :', () => {
         await testCase(caseParams, argFn);
 
         expect(global.execCase).toBeCalled();
-        expect(global.execCase.mock.calls[0][0]).toEqual(execCaseParamExpected);
+        expect(global.execCase).toHaveBeenCalledWith(execCaseParamExpected);
 
     });
 
