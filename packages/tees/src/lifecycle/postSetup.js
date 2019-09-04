@@ -117,7 +117,7 @@ function execCase({
     isSandbox,
   });
   const context = {
-    logger: generateLogger(caseTitle, global.hasReporter),
+    logger: generateLogger(caseTitle, global.hasReporter, isVerbose),
     driver: instance.driver,
     get browser() {
       return context.driver.browser;
