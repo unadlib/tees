@@ -93,7 +93,7 @@ Use CLI params to control the test you are running:
 | [--verbose](#verbose)   | -A        | -A                     | false       |
 | [--retry](#retry)     | -T        | -T {retryNumber}                 | 0           |
 | [--report](#report)    | -R        | -R                     | disable     |
-| [--testerCLI] | -C        | -C                      | disable     |
+| [--testerCLI](#testerCLI) | -C        | -C                      | disable     |
 
 ##### params
 Run all cases which met all these params. 
