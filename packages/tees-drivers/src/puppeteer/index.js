@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
-
+const {PptrHubHelper} = require('./pptrHub/pptrHubHelper');
+const {connectionType} = require('./pptrHub/options');
 const {
   Driver: BaseDriver,
   Query: BaseQuery
@@ -205,12 +206,28 @@ class Driver extends BaseDriver {
         `--load-extension=${extensionPath}`
       ],
     } : mergeSetting;
-    this._browser = await this._program.launch({
-      ...setting,
-      headless: isExtension ? false : this._isHeadless,
-      executablePath: `${executablePath}`,
-      userDataDir: `${userDataDir}`,
-    });
+    this.connType = connectionType;
+    switch(this.connType) {
+      case 'remote': {
+        this.pptr = new PptrHubHelper();
+        this.nodeConfig = await this.pptr.getRemoteNode();
+        const url = `${this.nodeConfig.puppeteerWSUrl}?headless=${
+          isExtension ? 'false' : this._isHeadless
+        }`;
+        this._browser = await this._program.connect({ browserWSEndpoint: url })
+        break;
+      }
+      case 'local':
+      default : {
+        this._browser = await this._program.launch({
+          ...setting,
+          headless: isExtension ? false : this._isHeadless,
+          executablePath: `${executablePath}`,
+          userDataDir: `${userDataDir}`,
+        });
+        break;
+      }
+    }
   }
 
   async newPage() {
@@ -229,7 +246,21 @@ class Driver extends BaseDriver {
   async close() {
     if (this._browser) {
       try {
-        await this._browser.close();
+        switch(this.connType) {
+          case 'remote': {
+            if (this.nodeConfig.networkSimulator) {
+              await this._browser.close();
+            } else {
+              this._browser.disconnect();
+            }
+            await this.pptr.releaseNode();
+            break;
+          }
+          case 'local':
+          default:
+            await this._browser.close();
+            break;
+        }
       } catch (e) {
         console.error(e);
       }

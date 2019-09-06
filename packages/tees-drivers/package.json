@@ -20,6 +20,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "selenium-webdriver": "^4.0.0-alpha.1",
-    "webextensions-geckodriver": "^0.6.0"
+    "webextensions-geckodriver": "^0.6.0",
+    "puppeteer_hub_client": "https://git.ringcentral.com/TA/tools/puppeteer_hub_client/uploads/bb7bb360af9625354a85400b51237595/puppeteer-hub-client-v1.2.tgz"
   }
 }
