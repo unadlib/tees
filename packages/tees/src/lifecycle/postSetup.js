@@ -116,8 +116,9 @@ function getExecCaseParams({
     modes,
     isSandbox,
   });
+
   const context = {
-    logger: generateLogger(caseTitle, global.hasReporter, isVerbose),
+    logger: generateLogger(caseTitle, global.hasReporter),
     driver: instance.driver,
     get browser() {
       return context.driver.browser;
