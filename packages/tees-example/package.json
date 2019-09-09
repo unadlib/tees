@@ -1,0 +1,15 @@
+{
+  "name": "tees-example",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "npx tees run ./src/example.spec.js -D puppeteer -S"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tees": "^1.0.0-alpha.51"
+  }
+}
