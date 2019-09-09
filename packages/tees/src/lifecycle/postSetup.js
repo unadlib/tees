@@ -57,10 +57,10 @@ async function afterEachEnd(context, afterHook) {
 }
 
 /**
- * execute case with case config and exection config.
+ * exection config
  * @param {object} params - execution params.
  */
-function execCase({
+function getExecCaseParams({
   driver,
   option,
   title,
@@ -116,6 +116,7 @@ function execCase({
     modes,
     isSandbox,
   });
+
   const context = {
     logger: generateLogger(caseTitle, global.hasReporter, isVerbose),
     driver: instance.driver,
@@ -141,8 +142,65 @@ function execCase({
   };
   // cache serialization options for retry.
   __optionsMapping__.set(context, JSON.stringify(context.options));
+
+  return {
+    caseTitle,
+    instance,
+    context,
+    beforeEachCase,
+    afterEachCase,
+  }
+
+}
+
+/**
+ *  execute case with case config and exection config.
+ *  @param {object} params - execution params.
+ */
+function execCase({
+  driver,
+  option,
+  title,
+  project,
+  group,
+  caseParams,
+  tag,
+  modes,
+  caseTag,
+  isSandbox,
+  isHeadless,
+  isDebugger,
+  isVerbose,
+  isOnly,
+  fn,
+}) {
   /* eslint-disable */
-  const func = (async function ({
+
+  const {
+    caseTitle,
+    instance,
+    context,
+    beforeEachCase,
+    afterEachCase,
+  } = global.getExecCaseParams({
+    driver,
+    option,
+    title,
+    project,
+    group,
+    caseParams,
+    tag,
+    modes,
+    caseTag,
+    isSandbox,
+    isHeadless,
+    isDebugger,
+    isVerbose,
+    isOnly,
+    fn,
+  })
+
+  const func = async function ({
     instance,
     context,
     beforeEachCase,
@@ -152,7 +210,8 @@ function execCase({
     global.__context__ = context;
     global.__beforeEachCase__ = beforeEachCase;
     global.__afterEachCase__ = afterEachCase;
-    await beforeEachStart(context, beforeEachCase);
+
+    await global.beforeEachStart(context, beforeEachCase);
     if (!context.options.isUT) {
       if (context.options.isSandbox) {
         const isAuth = context.options.option.isAuth;
@@ -162,7 +221,7 @@ function execCase({
       await context.driver.goto(context.options.config);
     }
     await fn(context);
-  }).bind(null, {
+  }.bind(null, {
     instance,
     context,
     beforeEachCase,
@@ -218,7 +277,7 @@ function testCase(caseParams, fn, isOnly = false) {
           if (isSkipped) {
             break;
           }
-          execCase({
+          global.execCase({
             driver,
             option,
             title,
@@ -253,7 +312,7 @@ function testSkip(...args) {
 }
 
 function testOnly(...args) {
-  return testCase(...args, true);
+  return global.test(...args, true);
 }
 
 function testDescribe(...args) {
@@ -268,3 +327,17 @@ global.describe = testDescribe;
 global.describe.skip = _describe.skip;
 global.test.skip = testSkip;
 global.test.only = testOnly;
+global.execCase = execCase;
+global.beforeEachStart = beforeEachStart;
+global.getExecCaseParams = getExecCaseParams;
+
+module.exports = {
+  beforeEachStart,
+  afterEachEnd,
+  getExecCaseParams,
+  execCase,
+  testCase,
+  testSkip,
+  testOnly,
+  testDescribe
+};
