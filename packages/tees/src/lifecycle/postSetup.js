@@ -92,14 +92,14 @@ function getExecCaseParams({
   });
   const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
   const _optionTags = Object.entries(_option)
-  .reduce((tags, [name, value]) => {
-    const isAccountTag = ['loginAccount', 'accounts'].includes(name);
-    if (!isAccountTag) return tags;
-    return [
-      ...tags,
-      `& ${name}-${value}`
-    ];
-  }, []).join(' ');
+    .reduce((tags, [name, value]) => {
+      const isAccountTag = ['loginAccount', 'accounts'].includes(name);
+      if (!isAccountTag) return tags;
+      return [
+        ...tags,
+        `& ${name}-${value}`
+      ];
+    }, []).join(' ');
   const tail = ` => (${project} ${groupInfos}${_optionTags}on ${driver})`;
   const caseTitle = `${name}${tail}`;
   const {
