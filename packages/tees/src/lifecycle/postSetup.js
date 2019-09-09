@@ -85,6 +85,11 @@ function getExecCaseParams({
     keys: Object.keys(templateMappding),
     values: Object.values(templateMappding),
   });
+  const _option = extendTagOption({
+    option,
+    caseTag,
+    tag
+  })
   const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
   const tail = ` => (${project} ${groupInfos}on ${driver})`;
   const caseTitle = `${name}${tail}`;
@@ -102,11 +107,6 @@ function getExecCaseParams({
     modes,
     isSandbox,
   });
-  const _option = extendTagOption({
-    option,
-    caseTag,
-    tag
-  })
   const context = {
     logger: generateLogger(caseTitle, global.hasReporter),
     driver: instance.driver,
