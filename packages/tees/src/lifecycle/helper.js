@@ -181,10 +181,13 @@ const types = [
 ];
 const originalInfoLog = global.console.info;
 
-function generateLogger(caseTitle, hasReporter) {
+function generateLogger(caseTitle, hasReporter, isVerbose) {
   return types.reduce(
     (logger, type) => {
       logger[type] = (info) => {
+        if (isVerbose) {
+          console.log(info);
+        }
         if (!hasReporter) return;
         const formatInfo = {
           type,

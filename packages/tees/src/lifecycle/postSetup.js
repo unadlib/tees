@@ -85,8 +85,22 @@ function getExecCaseParams({
     keys: Object.keys(templateMappding),
     values: Object.values(templateMappding),
   });
+  const _option = extendTagOption({
+    option,
+    caseTag,
+    tag
+  });
   const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
-  const tail = ` => (${project} ${groupInfos}on ${driver})`;
+  const _optionTags = Object.entries(_option)
+  .reduce((tags, [name, value]) => {
+    const isAccountTag = ['loginAccount', 'accounts'].includes(name);
+    if (!isAccountTag) return tags;
+    return [
+      ...tags,
+      `& ${name}-${value}`
+    ];
+  }, []).join(' ');
+  const tail = ` => (${project} ${groupInfos}${_optionTags}on ${driver})`;
   const caseTitle = `${name}${tail}`;
   const {
     config,
@@ -108,7 +122,7 @@ function getExecCaseParams({
     tag
   })
   const context = {
-    logger: generateLogger(caseTitle, global.hasReporter),
+    logger: generateLogger(caseTitle, global.hasReporter, isVerbose),
     driver: instance.driver,
     get browser() {
       return context.driver.browser;
