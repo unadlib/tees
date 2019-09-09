@@ -89,7 +89,7 @@ function getExecCaseParams({
     option,
     caseTag,
     tag
-  });
+  })
   const groupInfos = group.length > 0 ? `in ${group.join(' & ')} ` : '';
   const _optionTags = Object.entries(_option)
     .reduce((tags, [name, value]) => {
@@ -116,8 +116,9 @@ function getExecCaseParams({
     modes,
     isSandbox,
   });
+
   const context = {
-    logger: generateLogger(caseTitle, global.hasReporter, isVerbose),
+    logger: generateLogger(caseTitle, global.hasReporter),
     driver: instance.driver,
     get browser() {
       return context.driver.browser;
