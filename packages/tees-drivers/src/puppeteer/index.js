@@ -105,7 +105,12 @@ class Query extends BaseQuery {
         const { name, id } = document.querySelector(frameSelector);
         return name || id;
       }, frameSelector);
-      frame = this._node.frames().find(frame => frame.name() === name);
+      if (name !== '') {
+        frame = this._node.frames().find(frame => frame.name() === name);
+      } else {
+        const url = await frame.$eval(frameSelector, frame => frame.getAttribute('src'));
+        frame = this._node.frames().find(frame => frame.url() === url);
+      }
     }
     return frame;
   }
