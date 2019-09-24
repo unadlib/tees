@@ -1,6 +1,6 @@
 {
   "name": "tees-environment",
-  "version": "1.0.0-alpha.51",
+  "version": "1.0.0-alpha.52",
   "description": "Tees Environment",
   "repository": {
     "type": "git",
@@ -14,6 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "jest-environment-node": "^24.8.0",
-    "tees-drivers": "^1.0.0-alpha.51"
+    "tees-drivers": "^1.0.0-alpha.52"
   }
 }
