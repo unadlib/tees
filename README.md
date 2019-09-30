@@ -3,8 +3,8 @@
 [![Travis](https://img.shields.io/travis/unadlib/tees.svg)](https://travis-ci.org/unadlib/tees)
 [![npm](https://img.shields.io/npm/v/tees.svg)](https://www.npmjs.com/package/tees)
 
- `tees` is a complex of E2E test framework, it's based on `jest` as test runner.
- 
+`tees` is a complex of E2E test framework, it's based on `jest` as test runner.
+
 ### Contents
 
 - [Getting Started](#getting-started)
@@ -21,29 +21,37 @@
 
 ### Getting Started
 
-1. Initialize tees by cli: 
-```shell
-npx tees init yourProjectName
+1. Initialize tees by cli:
+
+```sh
+npx tees init my-app
 ```
+
 2. Tees will ask you a few questions and will create a basic configuration file and an example file. Press Enter key to choose the default configuration.
 3. Running from the command line:  
-There is a folder "yourProjectName" under the current path:
-```shell
-cd yourProjectName
+   There is a folder "yourProjectName" under the current path:
+
+```she
+cd my-app
 ```
-Run yarn install to install the necessary dependencies. It will take you several minutes. 
-```shell
+
+Run yarn install to install the necessary dependencies. It will take you several minutes.
+
+```sh
 yarn install
-```	 
-Run your first E2E case: 
-```shell
+```
+
+Run your first E2E case:
+
+```sh
 npx tees run ./src/example.spec.js
 ```
 
 ### Additional Configuration
 
-Based on your project, there are several things need to config in e2e.config.js file. 
+Based on your project, there are several things need to config in e2e.config.js file.
 Add params in e2e.config, such as the project name, the type of your project.
+
 ```js
 module.exports  = {
 	params: {
@@ -60,15 +68,19 @@ module.exports  = {
 	...
 };
 ```
-Change the selectorLabel to what you are using, eg. class, id, or any other tag 
-name. 
+
+Change the selectorLabel to what you are using, eg. class, id, or any other tag
+name.
+
 ```js
 module.exports  = {
 	selectorLabel: 'class',
 	...
 };
 ```
+
 The default execution timeout for each test case is 2 minutes. If you want to change it to 20 minutes, you can add timeout in e2e.config.
+
 ```js
 module.exports  = {
 	timeout: 1000  *  60  *  20,
@@ -78,40 +90,49 @@ module.exports  = {
 
 ### Advanced Guides
 
-####CLI usage:
+#### CLI usage:
 A simplest command can be: npx tees run yourTestFilePath
 
 Use CLI params to control the test you are running:
-| Reference   | Short key | Params                  | default     |
-| ----------- | --------- |----------------------- | ----------- |
-| [--params](#params)    | -P        | -P {}                  | None        |
-| [--drivers](#drivers)   | -D        | -D {drivers}           | all drivers |
-| [--sandbox](#sandbox)   | -S        | -S                     | disable     |
-| [--debugger](#debugger)  | -X        | -X                     | disable     |
-| [--headless](#headless)  | -H        | -H                     | disable     |
-| [--exclude](#exclude)   | -E        | -E {filePath} | disable     |
-| [--verbose](#verbose)   | -A        | -A                     | false       |
-| [--retry](#retry)     | -T        | -T {retryNumber}                 | 0           |
-| [--report](#report)    | -R        | -R                     | disable     |
-| [--testerCLI](#testerCLI) | -C        | -C                      | disable     |
+
+| Reference                 | Short key | Params           | default     |
+| ------------------------- | --------- | ---------------- | ----------- |
+| [--params](#params)       | -P        | -P {}            | None        |
+| [--drivers](#drivers)     | -D        | -D {drivers}     | all drivers |
+| [--sandbox](#sandbox)     | -S        | -S               | disable     |
+| [--debugger](#debugger)   | -X        | -X               | disable     |
+| [--headless](#headless)   | -H        | -H               | disable     |
+| [--exclude](#exclude)     | -E        | -E {filePath}    | disable     |
+| [--verbose](#verbose)     | -A        | -A               | false       |
+| [--retry](#retry)         | -T        | -T {retryNumber} | 0           |
+| [--report](#report)       | -R        | -R               | disable     |
+| [--testerCLI](#testerCLI) | -C        | -C               | disable     |
 
 ##### params
-Run all cases which met all these params. 
-```shell
+
+Run all cases which met all these params.
+
+```sh
 -P '{brands:["rc",],levels:["p0","p1",],tags:[["widgets"],]}'
-```	 
+```
 
 ##### drivers
-Run case on specific driver 
-```shell
+
+Run case on specific driver
+
+```sh
 -D puppeteer
-```	 
+```
+
 or use ',' to split difference drivers
-```shell
+
+```sh
 -D puppeteer,chrome
-```	
+```
+
 supported drivers:
-1. puppeteer 
+
+1. puppeteer
 2. chrome
 3. firefox
 4. edge
@@ -120,52 +141,65 @@ supported drivers:
 7. enyzme
 
 ##### sandbox
+
 With sandbox mode, every case will start a totally new driver.
-Without sandbox mode, every run will only start a driver. 
+Without sandbox mode, every run will only start a driver.
 
 ##### debugger
+
 With debugger mode, some additional debug message will output. Default OFF.
 
 ##### headless
-Headless default OFF. 
+
+Headless default OFF.
 
 ##### exclude
+
 Use exclude to ignore some unnecessary path.
-```shell
+
+```sh
 -E ./node_modules/
-```	 
+```
+
 to ignore more than one path
-```shell
+
+```sh
 -E ./node_modules/ ./__temp__/
-```	 
+```
 
 ##### verbose
+
 Enable verbose to get more imformation when debugging.
 
 ##### retry
+
 Rerun case when there are some error occur. The default value of retry time is 0. The maximum retry times is 10.
-```shell
+
+```sh
 -T 3
 ```
 
 ##### reporter
+
 Enable reporter will push your console output to an on-line web.
 
 ##### testerCLI
+
 Jest CLI. Pass params to jest via this testerCLI.
-```shell
+
+```sh
 -C '--findRelatedTests path/to/fileA.js path/to/fileB.js'
 ```
 
-Note: And you can append all these commands together. 
+Note: And you can append all these commands together.
 
-The command below will run test file 1 and 2 in puppeteer on sandbox and headless mode. Example: 
-```shell
+The command below will run test file 1 and 2 in puppeteer on sandbox and headless mode. Example:
+
+```sh
 npx tees run yourTestFilePath1 yourTestFilePath2 -D puppeteer -S -H
 ```
 
-####E2E config
-
+#### E2E config
 
 ### APIs Reference
 
@@ -187,7 +221,6 @@ npx tees run yourTestFilePath1 yourTestFilePath2 -D puppeteer -S -H
 | ------------ | ----------------------------------------------- | -------- |
 | lookupConfig | Look up executive config from this config file. | function |
 | params       | Setting project basic information.              | object   |
-
 
 #### Test Drivers
 
@@ -233,17 +266,17 @@ context.driver.addAfterHook(async () => {
 
 | Drivers                             | cases | threads | sandbox | performance | stability |
 | ----------------------------------- | ----- | ------- | ------- | ----------- | --------- |
-| **puppeteer/Firefox/Chrome/Safari** | 1600  | 1       |         | 1312.125s   | ✅         |
-| **puppeteer**                       | 400   | 8       |         | 96.44s      | ✅         |
-| puppeteer                           | 400   | 1       |         | 237.614s    | ✅         |
-| puppeteer                           | 400   | 8       | ✅       | 289.44s     | ✅         |
-| Chrome                              | 400   | 8       |         | 103.665s    | ✅         |
-| Firefox                             | 400   | 8       |         | 415.726s    | ✅         |
+| **puppeteer/Firefox/Chrome/Safari** | 1600  | 1       |         | 1312.125s   | ✅        |
+| **puppeteer**                       | 400   | 8       |         | 96.44s      | ✅        |
+| puppeteer                           | 400   | 1       |         | 237.614s    | ✅        |
+| puppeteer                           | 400   | 8       | ✅      | 289.44s     | ✅        |
+| Chrome                              | 400   | 8       |         | 103.665s    | ✅        |
+| Firefox                             | 400   | 8       |         | 415.726s    | ✅        |
 | puppeteer/Firefox/Chrome            | 1200  | 8       |         | 630.503s    | ⚠️        |
-| Safari                              | 400   | 8       |         | -           | ❌         |
-| Enzyme                              | 400   | 1       | ✅       | 374.998s    | ✅         |
-| **Enzyme**                          | 400   | 8       | ✅       | 149.882s    | ✅         |
-| Enzyme                              | 400   | 1       |         | -           | ❌         |
+| Safari                              | 400   | 8       |         | -           | ❌        |
+| Enzyme                              | 400   | 1       | ✅      | 374.998s    | ✅        |
+| **Enzyme**                          | 400   | 8       | ✅      | 149.882s    | ✅        |
+| Enzyme                              | 400   | 1       |         | -           | ❌        |
 
 > `Chrome` is selenium webdriver's Chrome.</br>
 > Selenium webdriver multithreading operation is not stable.</br>
@@ -253,7 +286,6 @@ context.driver.addAfterHook(async () => {
 ### [Contribution Guide](CONTRIBUTION.md)
 
 Read our [contribution guide](CONTRIBUTION.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Tees.
-
 
 ### License
 
