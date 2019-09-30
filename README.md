@@ -54,18 +54,18 @@ Add params in e2e.config, such as the project name, the type of your project.
 
 ```js
 module.exports  = {
-	params: {
-		projects: {
-			//project name
-			'example': {
-				//uri or extension
-				type: 'uri',
-				//if your project is an extension, you need to add source path
-				location: 'https://cn.bing.com/',
-			}
-		}
-	},
-	...
+  params: {
+    projects: {
+      //project name
+      'example': {
+        //uri or extension
+        type: 'uri',
+        //if your project is an extension, you need to add source path
+        location: 'https://cn.bing.com/',
+      }
+    }
+  },
+  //...
 };
 ```
 
@@ -74,8 +74,8 @@ name.
 
 ```js
 module.exports  = {
-	selectorLabel: 'class',
-	...
+  selectorLabel: 'class',
+  //...
 };
 ```
 
@@ -83,14 +83,15 @@ The default execution timeout for each test case is 2 minutes. If you want to ch
 
 ```js
 module.exports  = {
-	timeout: 1000  *  60  *  20,
-	...
+  timeout: 1000  *  60  *  20,
+  //...
 };
 ```
 
 ### Advanced Guides
 
 #### CLI usage:
+
 A simplest command can be: npx tees run yourTestFilePath
 
 Use CLI params to control the test you are running:
