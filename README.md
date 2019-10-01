@@ -24,15 +24,14 @@
 1. Initialize tees by cli:
 
 ```sh
-npx tees init my-app
+npx tees init yourProjectName
 ```
 
 2. Tees will ask you a few questions and will create a basic configuration file and an example file. Press Enter key to choose the default configuration.
-3. Running from the command line:  
-   There is a folder "yourProjectName" under the current path:
+3. Running from the command line, there is a folder "yourProjectName" under the current path:
 
 ```she
-cd my-app
+cd yourProjectName
 ```
 
 Run yarn install to install the necessary dependencies. It will take you several minutes.
@@ -41,7 +40,7 @@ Run yarn install to install the necessary dependencies. It will take you several
 yarn install
 ```
 
-Run your first E2E case:
+Run your E2E case:
 
 ```sh
 npx tees run ./src/example.spec.js
@@ -69,8 +68,7 @@ module.exports  = {
 };
 ```
 
-Change the selectorLabel to what you are using, eg. class, id, or any other tag
-name.
+Change the selectorLabel to what you are using, eg. class, id, or any other tag name.
 
 ```js
 module.exports  = {
@@ -114,7 +112,7 @@ Use CLI params to control the test you are running:
 Run all cases which met all these params.
 
 ```sh
--P '{brands:["rc",],levels:["p0","p1",],tags:[["widgets"],]}'
+-P '{brands:["rc"],levels:["p0","p1"],tags:[["widgets"]]}'
 ```
 
 ##### drivers
