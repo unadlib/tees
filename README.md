@@ -48,8 +48,8 @@ npx tees run ./src/example.spec.js
 
 ### Additional Configuration
 
-Based on your project, there are several things need to config in e2e.config.js file.
-Add params in e2e.config, such as the project name, the type of your project.
+Based on your project, there are several things need to config in `e2e.config.js` file.
+Add params in `e2e.config.js`, such as the project name, the type of your project.
 
 ```js
 module.exports  = {

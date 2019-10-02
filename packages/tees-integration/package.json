@@ -1,0 +1,15 @@
+{
+  "name": "tees-integration",
+  "version": "1.0.0-alpha.52",
+  "private": true,
+  "description": "Tees examples for integration testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "tees run test/**"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "tees": "*"
+  }
+}
