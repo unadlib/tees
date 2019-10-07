@@ -4,7 +4,7 @@ module.exports = {
     projects: {
       examples: {
         type: 'uri',
-        location: 'https://cn.bing.com/',
+        location: 'http://localhost:3000/',
       }
     }
   },

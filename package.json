@@ -4,7 +4,9 @@
   "description": "Universal test framework for front-end",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=development jest --config ./scripts/jest/config.js",
+    "test": "yarn test:ut && yarn test:it",
+    "test:it": "cd packages/tees-integration && yarn test",
+    "test:ut": "cross-env NODE_ENV=development jest --config ./scripts/jest/config.js",
     "watch": "yarn test --watch",
     "lint": "node ./scripts/eslint.js",
     "build": "node ./scripts/build.js",
