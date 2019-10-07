@@ -68,7 +68,8 @@
     "build": "node scripts/build.js",
     "forever:start": "forever start scripts/start.js",
     "forever:stop": "forever stop scripts/start.js",
-    "test": "yarn forever:start && wait-on tcp:3000 && tees run integration-test/** -H && yarn forever:stop"
+    "test:tees": "tees run integration-test/** -H",
+    "test": "yarn forever:start && wait-on tcp:3000 && yarn test:tees && yarn forever:stop"
   },
   "eslintConfig": {
     "extends": "react-app"

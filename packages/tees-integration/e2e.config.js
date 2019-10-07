@@ -1,3 +1,5 @@
+const { Query } = require('./integration-test/lib/puppeteerQuery');
+
 module.exports = {
   selectorLabel: 'class',
   params: {
@@ -6,6 +8,11 @@ module.exports = {
         type: 'uri',
         location: 'http://localhost:3000/',
       }
+    }
+  },
+  drivers: {
+    puppeteer: {
+      Query,
     }
   },
   lookupConfig({
