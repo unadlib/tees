@@ -15,7 +15,6 @@
     "babel-preset-react-app": "^9.0.2",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
-    "concurrently": "^5.0.0",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "5.1.0",
@@ -28,6 +27,7 @@
     "eslint-plugin-react": "7.14.3",
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "3.0.1",
+    "forever": "^1.0.0",
     "fs-extra": "7.0.1",
     "html-webpack-plugin": "4.0.0-beta.5",
     "identity-obj-proxy": "3.0.0",
@@ -66,7 +66,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "concurrently \"yarn start\" \"wait-on tcp:3000 && tees run integration-test/** -H\" -k"
+    "forever:start": "forever start scripts/start.js",
+    "forever:stop": "forever stop scripts/start.js",
+    "test": "yarn forever:start && wait-on tcp:3000 && tees run integration-test/** -H && yarn forever:stop"
   },
   "eslintConfig": {
     "extends": "react-app"

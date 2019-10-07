@@ -1,6 +1,6 @@
-describe('Bing search', () => {
+describe('Default page', () => {
   test({
-    title: 'Search Ringcentral and check the result include Ringcentral',
+    title: 'check text include "Learn React" in default page',
   }, async ({ page }) => {
     const text = await $(page).getText('@App-link');
     expect(text).toMatch('Learn React');
