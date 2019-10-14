@@ -52,8 +52,8 @@ function restoreTags(group, project) {
       [key]: value,
     };
   }, {
-    project
-  });
+      project
+    });
 }
 
 function getTags({
@@ -132,32 +132,32 @@ function flattenTestConfig(config) {
         params = []
       } = {}
     ]) => [
-      ...projects,
-      [
-        project,
-        {
-          ...Object.entries(params).reduce((patterns, [name, pattern]) => {
-            const values = getPattern(pattern);
-            if (!values) return patterns;
-            return ({
-              ...patterns,
-              [name]: values,
-            });
-          }, generalParams.reduce((generalParams, [name, values]) => ({
-            ...generalParams,
-            [name]: values
-          }), {})),
-          ..._tags,
-          ...tags.reduce((tag, [_project, _tag]) => {
-            if (_project !== project) return tag;
-            return {
-              ...tag,
-              ..._tag
-            };
-          }, {})
-        }
-      ]
-    ], []);
+        ...projects,
+        [
+          project,
+          {
+            ...Object.entries(params).reduce((patterns, [name, pattern]) => {
+              const values = getPattern(pattern);
+              if (!values) return patterns;
+              return ({
+                ...patterns,
+                [name]: values,
+              });
+            }, generalParams.reduce((generalParams, [name, values]) => ({
+              ...generalParams,
+              [name]: values
+            }), {})),
+            ..._tags,
+            ...tags.reduce((tag, [_project, _tag]) => {
+              if (_project !== project) return tag;
+              return {
+                ...tag,
+                ..._tag
+              };
+            }, {})
+          }
+        ]
+      ], []);
 }
 
 function getDriverInstance({
@@ -184,9 +184,9 @@ const originalInfoLog = global.console.info;
 function generateLogger(caseTitle, hasReporter, isVerbose) {
   return types.reduce(
     (logger, type) => {
-      logger[type] = (info) => {
+      logger[type] = (...info) => {
         if (isVerbose) {
-          console.log(info);
+          console.log(...info);
         }
         if (!hasReporter) return;
         const formatInfo = {
