@@ -4,7 +4,9 @@
   "description": "Universal test framework for front-end",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=development jest --config ./scripts/jest/config.js",
+    "test": "yarn test:ut && yarn test:it",
+    "test:it": "cd packages/tees-integration && yarn test",
+    "test:ut": "cross-env NODE_ENV=development jest --config ./scripts/jest/config.js",
     "watch": "yarn test --watch",
     "lint": "node ./scripts/eslint.js",
     "build": "node ./scripts/build.js",
@@ -16,7 +18,7 @@
   },
   "private": true,
   "devEngines": {
-    "node": "8.x || 9.x"
+    "node": "8.x || 9.x || 10.x"
   },
   "workspaces": [
     "packages/*"
@@ -41,7 +43,7 @@
     "commitizen": "^3.0.5",
     "cross-env": "^5.2.0",
     "cz-conventional-changelog": "^2.1.0",
-    "jest": "^24.1.0",
+    "jest": "^24.8.0",
     "lerna": "^3.13.1"
   },
   "config": {

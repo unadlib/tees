@@ -30,11 +30,25 @@ function checkValidBrowsers(process) {
 }
 
 const createDriver = (name, inputSetting = {}) => {
-  const {
+  let config;
+  try {
+    const { globals } = getConfig(process);
+    // eslint-disable-next-line
+    config = require(globals.configPath);
+  } catch (error) {
+    console.error(error);
+    process.exit();
+    return;
+  }
+  let {
     Driver,
     setting,
     Query
   } = e2eDrivers[name];
+  if (config && config.drivers && config.drivers[name]) {
+    Driver = config.drivers[name].Driver || Driver;
+    Query = config.drivers[name].Query || Query;
+  }
   // TDDO inputSetting for browser
   const options = {
     driver: {
