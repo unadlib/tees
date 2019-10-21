@@ -199,8 +199,7 @@ let context = {
     group: ['levels-p3',
         'brands-rc',
         'tags-salesforce',
-        'options-accounts',
-        'accounts-account'
+        'options-accounts'
     ],
     caseParams,
     tag: { project: 'google' },
