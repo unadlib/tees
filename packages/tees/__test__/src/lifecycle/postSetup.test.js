@@ -208,7 +208,7 @@ describe('postSetup unit test : beforeEachStart', () => {
 
         });
     }),
-    describe('postSetup unit test : testCase', () => {
+    describe('postSetup unit test : testOnly', () => {
 
         it(`testOnly, return global.testCase `, async () => {
 
