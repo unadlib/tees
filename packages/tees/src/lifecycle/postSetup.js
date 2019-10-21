@@ -118,7 +118,7 @@ function getExecCaseParams({
   });
 
   const context = {
-    logger: generateLogger(caseTitle, global.hasReporter),
+    logger: generateLogger(caseTitle, global.hasReporter, isVerbose),
     driver: instance.driver,
     get browser() {
       return context.driver.browser;
@@ -200,7 +200,7 @@ function execCase({
     fn,
   })
 
-  const func = async function ({
+  const func = (async function ({
     instance,
     context,
     beforeEachCase,
@@ -221,7 +221,7 @@ function execCase({
       await context.driver.goto(context.options.config);
     }
     await fn(context);
-  }.bind(null, {
+  }).bind(null, {
     instance,
     context,
     beforeEachCase,
