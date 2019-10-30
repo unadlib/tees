@@ -15,21 +15,13 @@ class Query {
   }
 
   getSelector(selector) {
+
     const labelSign = /^@\s*/;
-    const isUsingCssSelector = !this._label || labelSign.test(selector);
-    if (isUsingCssSelector) {
-      return selector
-        .replace(labelSign, '')
-        .split(' ')
-        .map((_selector) => {
-          const [labelSelector, index] = _selector.split(':');
-          const childSelector = index ?
-            `:nth-${/-/.test(index) ? 'last-' : ''}child(${index.replace('-', '')})` : '';
-          return `[${this._label}="${labelSelector}"]${childSelector}`;
-        })
-        .join(' ');
-    }
-    return selector;
+    return selector.split(' ').map(_selector => {
+      const [labelSelector, index] = _selector.replace(/^@\s*/, '').split(':');
+      return labelSign.test(_selector) ? `[${this._label}="${labelSelector}"]${index ?
+        `:nth-${/-/.test(index) ? 'last-' : ''}child(${index.replace('-', '')})` : ''}` : _selector;
+    }).join(' ')
   }
 
   async waitFor(param, options, ...args) {
