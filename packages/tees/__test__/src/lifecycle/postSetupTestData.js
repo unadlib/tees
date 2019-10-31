@@ -114,7 +114,23 @@ const helper = require('../../../src/lifecycle/helper');
 
 const caseTitle = "execute case => (google in levels-p3 & brands-rc & tags-salesforce & options-accounts & accounts-account on puppeteer)"
 
+const mockProcessArgv = () => process.argv = ['/usr/local/bin/node',
+    '/Users/lena.chen/RingCentral/tee-ut/tees/packages/tees/node_modules/jest/bin/jest.js',
+    '--config={"verbose":true,"testMatch":["<rootDir>/packages/tees/templates/exampleSpec.js"],"testPathIgnorePatterns":[],"setupFiles":["/Users/lena.chen/RingCentral/tee-ut/tees/packages/tees/src/lifecycle/setup.js"],"setupFilesAfterEnv":["/Users/lena.chen/RingCentral/tee-ut/tees/packages/tees/src/lifecycle/postSetup.js"],"globals":{"hasReporter":false,"configPath":"/Users/lena.chen/RingCentral/tee-ut/tees/e2e.config.js","retryTimes":0,"execTags":[],"execModes":[],"execDrivers":["puppeteer"],"execGlobal":{"selectorLabel":"class","params":{"drivers":["puppeteer"],"projects":{"${projectName}":{"type":"uri","location":"https://cn.bing.com/"}}},"exec":{"drivers":["puppeteer"]},"defaults":{"drivers":["puppeteer"]}},"execDefaults":{"browsers":{}}},"globalSetup":"tees-environment/setup","globalTeardown":"tees-environment/teardown","testEnvironment":"tees-environment","transform":{"^.+\\\\.(jsx|js)$":"babel-jest"},"testRunner":"jest-circus/runner"}',
+    '--forceExit',
+    '--no-cache',
+    '--detectOpenHandles'];
+
+mockProcessArgv();
+
 const instance = helper.getDriverInstance({ drivers: global.drivers, driver: "puppeteer", isSandbox: true });
+
+let driversObj = {};
+global.drivers.forEach(element => {
+    driversObj[element] = instance;
+});
+
+global.drivers = driversObj;
 
 const contextParamExpected = {
     logger: helper.generateLogger(caseTitle, global.hasReporter),
@@ -183,8 +199,7 @@ let context = {
     group: ['levels-p3',
         'brands-rc',
         'tags-salesforce',
-        'options-accounts',
-        'accounts-account'
+        'options-accounts'
     ],
     caseParams,
     tag: { project: 'google' },
