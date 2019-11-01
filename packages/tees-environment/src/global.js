@@ -32,9 +32,8 @@ function checkValidBrowsers(process) {
 const createDriver = (name, inputSetting = {}) => {
   let config;
   try {
-    const { globals } = getConfig(process);
     // eslint-disable-next-line
-    config = require(globals.configPath);
+    config = require(inputSetting.configPath);
   } catch (error) {
     console.error(error);
     process.exit();
