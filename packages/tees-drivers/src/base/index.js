@@ -15,12 +15,15 @@ class Query {
   }
 
   getSelector(selector) {
-
     const labelSign = /^@\s*/;
     return selector.split(' ').map(_selector => {
       const [labelSelector, index] = _selector.replace(/^@\s*/, '').split(':');
-      return labelSign.test(_selector) ? `[${this._label}="${labelSelector}"]${index ?
-        `:nth-${/-/.test(index) ? 'last-' : ''}child(${index.replace('-', '')})` : ''}` : _selector;
+      if (labelSign.test(_selector)) {
+        return `[${this._label}="${labelSelector}"]${index ?
+          `:nth-${/-/.test(index) ? 'last-' : ''}child(${index.replace('-', '')})` : ''}`
+      } else {
+        return _selector;
+      }
     }).join(' ')
   }
 
