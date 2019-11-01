@@ -107,7 +107,8 @@ class WebDriverEnvironment {
         const instance = createDriver(name, {
           // ...defaultSetting,
           // ...execSetting,
-          selectorLabel: this._config.globals.execGlobal.selectorLabel
+          selectorLabel: this._config.globals.execGlobal.selectorLabel,
+          configPath: this._config.globals.configPath,
         });
         await instance.driver.run({ ...mergeConfig, isHeadless });
         await instance.driver.newPage();

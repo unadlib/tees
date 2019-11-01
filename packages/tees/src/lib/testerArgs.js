@@ -10,7 +10,7 @@ const postSetupFile = 'src/lifecycle/postSetup.js';
 const globalSetup = 'tees-environment/setup';
 const globalTeardown = 'tees-environment/teardown';
 const testEnvironment = 'tees-environment';
-const tails = ['--forceExit', '--no-cache', '--detectOpenHandles'];
+const tails = ['--forceExit', '--no-cache'];
 
 function mergeConfig(config, defaultsConfig) {
   return {
