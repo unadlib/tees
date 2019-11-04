@@ -100,7 +100,7 @@ function getExecCaseParams({
         `& ${name}-${value}`
       ];
     }, []).join(' ');
-  const tail = ` => (${project} ${groupInfos}${_optionTags}on ${driver})`;
+  const tail = ` => (${project} ${groupInfos}${_optionTags} on ${driver})`;
   const caseTitle = `${name}${tail}`;
   const {
     config,
