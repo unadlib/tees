@@ -166,7 +166,8 @@ function getDriverInstance({
   isSandbox,
 }) {
   return isSandbox || driver === 'enzyme' ? createDriver(driver, {
-    selectorLabel: global.execGlobal.selectorLabel
+    selectorLabel: global.execGlobal.selectorLabel,
+    configPath: global.configPath
   }) : drivers[driver];
 }
 
