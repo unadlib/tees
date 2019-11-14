@@ -16,7 +16,7 @@
     "enzyme-adapter-react-16": "^1.14.0",
     "geckodriver": "^1.16.1",
     "get-port": "^5.0.0",
-    "puppeteer": "^1.7.0",
+    "puppeteer": "^1.14.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "selenium-webdriver": "^4.0.0-alpha.1",
