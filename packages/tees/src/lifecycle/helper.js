@@ -1,8 +1,9 @@
-const createDriver = require('tees-environment/createDriver');
-const {
-  isNil,
-  isPlainobject
-} = require('../utils/check');
+const createDriver = require("tees-environment/createDriver");
+const { configPath } = require('../run');
+const { isNil, isPlainobject } = require("../utils/check");
+const { load } = require('../plugins');
+
+const retryTimesKey = Symbol.for('RETRY_TIMES');
 
 function mergeTags(tags, supersetTags) {
   if (Array.isArray(tags) && tags.length === 0) {
@@ -13,21 +14,25 @@ function mergeTags(tags, supersetTags) {
     const matchTag = supersetTags.find(([_project]) => _project === project);
     if (matchTag) {
       const [_project, _tag] = matchTag;
-      mergedTags.push([_project, {
-        ..._tag,
-        ...tag
-      }]);
+      mergedTags.push([
+        _project,
+        {
+          ..._tag,
+          ...tag
+        }
+      ]);
     }
   });
   return mergedTags;
 }
 
 function flattenTags(tags) {
-  const _tags = Object.entries(tags)
-    .map(
-      ([name, values]) => values
-        .map(value => `${name}-${typeof value === 'object' ? Object.keys(value)[0] : value}`)
-    );
+  const _tags = Object.entries(tags).map(([name, values]) =>
+    values.map(
+      value =>
+        `${name}-${typeof value === "object" ? Object.keys(value)[0] : value}`
+    )
+  );
   const groups = [];
   const group = [];
   const getGroups = (_tags, depth = 0) => {
@@ -45,28 +50,28 @@ function flattenTags(tags) {
 }
 
 function restoreTags(group, project) {
-  return group.reduce((_group, name) => {
-    const [key, value] = name.split('-');
-    return {
-      ..._group,
-      [key]: value,
-    };
-  }, {
-    project
-  });
+  return group.reduce(
+    (_group, name) => {
+      const [key, value] = name.split("-");
+      return {
+        ..._group,
+        [key]: value
+      };
+    },
+    {
+      project
+    }
+  );
 }
 
-function getTags({
-  rawTags,
-  defaultTestConfig,
-  caseTags
-}) {
+function getTags({ rawTags, defaultTestConfig, caseTags }) {
   const isExistTags = rawTags.length === 0;
-  const tags = isExistTags ? defaultTestConfig.map(([_project, _tags]) => [
-    _project, { ..._tags, ...caseTags, }
-  ]) : rawTags.map(([_project, _tags]) => [
-    _project, { ...caseTags, ..._tags, }
-  ]);
+  const tags = isExistTags
+    ? defaultTestConfig.map(([_project, _tags]) => [
+        _project,
+        { ..._tags, ...caseTags }
+      ])
+    : rawTags.map(([_project, _tags]) => [_project, { ...caseTags, ..._tags }]);
   return tags;
 }
 
@@ -74,9 +79,9 @@ function checkSkippedCase({ project, ...execTag }, [, caseTag]) {
   if (!caseTag) return true;
   for (const [name, value] of Object.entries(execTag)) {
     if (!Array.isArray(caseTag[name])) return true;
-    const currentCaseTag = caseTag[name].map(item => (
+    const currentCaseTag = caseTag[name].map(item =>
       Array.isArray(item) ? item[0] : item
-    ));
+    );
     if (currentCaseTag.indexOf(value) === -1) return true;
   }
   return false;
@@ -93,16 +98,14 @@ function getCaseTags({ caseParams, params }) {
   }, {});
 }
 
-function extendTagOption({
-  option,
-  caseTag,
-  tag
-}) {
+function extendTagOption({ option, caseTag, tag }) {
   Object.entries(tag).forEach(([key, value]) => {
     if (!caseTag[1][key]) return;
-    const tagOption = caseTag[1][key].find(item => Array.isArray(item) && item[0] === value);
+    const tagOption = caseTag[1][key].find(
+      item => Array.isArray(item) && item[0] === value
+    );
     if (tagOption) {
-      option = { ...tagOption[1] || {}, ...option };
+      option = { ...(tagOption[1] || {}), ...option };
     }
   });
   return option;
@@ -124,29 +127,32 @@ function getPattern(value) {
 
 function flattenTestConfig(config) {
   const { tags = [], ..._tags } = config.defaults || {};
-  const generalParams = Object.entries(config.params).filter(([key]) => key !== 'projects');
-  return Object.entries(config.params.projects).reduce(
-    (projects, [
-      project,
-      {
-        params = []
-      } = {}
-    ]) => [
+  const generalParams = Object.entries(config.params).filter(
+    ([key]) => key !== "projects"
+  );
+  const flattenConfig = Object.entries(config.params.projects).reduce(
+    (projects, [project, { params = [] } = {}]) => [
       ...projects,
       [
         project,
         {
-          ...Object.entries(params).reduce((patterns, [name, pattern]) => {
-            const values = getPattern(pattern);
-            if (!values) return patterns;
-            return ({
-              ...patterns,
-              [name]: values,
-            });
-          }, generalParams.reduce((generalParams, [name, values]) => ({
-            ...generalParams,
-            [name]: values
-          }), {})),
+          ...Object.entries(params).reduce(
+            (patterns, [name, pattern]) => {
+              const values = getPattern(pattern);
+              if (!values) return patterns;
+              return {
+                ...patterns,
+                [name]: values
+              };
+            },
+            generalParams.reduce(
+              (generalParams, [name, values]) => ({
+                ...generalParams,
+                [name]: values
+              }),
+              {}
+            )
+          ),
           ..._tags,
           ...tags.reduce((tag, [_project, _tag]) => {
             if (_project !== project) return tag;
@@ -157,7 +163,10 @@ function flattenTestConfig(config) {
           }, {})
         }
       ]
-    ], []);
+    ],
+    []
+  );
+  return flattenConfig;
 }
 
 function getDriverInstance({
@@ -171,15 +180,7 @@ function getDriverInstance({
   }) : drivers[driver];
 }
 
-const types = [
-  'error',
-  'warn',
-  'info',
-  'log',
-  'trace',
-  'debug',
-  'screenshot'
-];
+const types = ["error", "warn", "info", "log", "trace", "debug", "screenshot"];
 const originalInfoLog = global.console.info;
 
 function generateLogger(caseTitle, hasReporter, isVerbose) {
@@ -205,7 +206,67 @@ function generateLogger(caseTitle, hasReporter, isVerbose) {
   )
 };
 
+/**
+ * perpare test config and init test driver before test execute.
+ * @param {object} param - params for test prepare.
+ * @param {object} param.tag - test tag.
+ * @param {object} param.drivers - support drivers object list.
+ * @param {string} param.driver - test driver name.
+ * @param {object} param.isSandbox - current test execution mode is or not 'sandbox'.
+ */
+function testPrepare({
+  tag,
+  drivers,
+  driver,
+  isSandbox,
+  overWriteConfigPath = configPath
+}) {
+  const {
+    lookupConfig,
+    beforeEachCase,
+    afterEachCase,
+  } = require(overWriteConfigPath);
+  const instance = getDriverInstance({
+    drivers,
+    driver,
+    isSandbox,
+  });
+  const config = typeof lookupConfig === 'function' ? lookupConfig({
+    config: global.execGlobal,
+    tag,
+  }) : {};
+  return {
+    instance,
+    config,
+    beforeEachCase,
+    afterEachCase,
+  };
+}
+
+/**
+ * load global params and plugins for preheating test.
+ * @param {object} param
+ * @param {object} param.config - set up config.
+ * @param {array} param.plugins - load perset plugins
+ */
+function setup({
+  config,
+  plugins,
+  overWriteConfigPath = configPath
+}) {
+  const {
+    timeout
+  } = require(overWriteConfigPath);
+  global[retryTimesKey] = global.retryTimes;
+  global.defaultTestConfig = flattenTestConfig(config);
+  global.testPrepare = testPrepare;
+  global.testTimeout = timeout;
+  load(plugins);
+}
+
 module.exports = {
+  testPrepare,
+  setup,
   mergeTags,
   flattenTags,
   restoreTags,
@@ -215,5 +276,5 @@ module.exports = {
   extendTagOption,
   flattenTestConfig,
   getDriverInstance,
-  generateLogger,
+  generateLogger
 };

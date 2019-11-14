@@ -1,0 +1,240 @@
+{
+  "valid": {
+    "fullConfig": {
+      "defaults": {
+        "drivers": ["enzyme"],
+        "tags": [
+          [
+            "salesforce",
+            {
+              "drivers": ["firefox"]
+            }
+          ]
+        ]
+      },
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "drivers": ["puppeteer"]
+            }
+          }
+        },
+        "drivers": ["chrome"]
+      }
+    },
+    "noDefaultDriver": {
+      "defaults": {
+        "tags": [
+          [
+            "salesforce",
+            {
+              "drivers": ["firefox"]
+            }
+          ]
+        ]
+      },
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "drivers": ["puppeteer"]
+            }
+          }
+        },
+        "drivers": ["chrome"]
+      }
+    },
+    "noDefaultTags": {
+      "defaults": {
+        "drivers": ["enzyme"]
+      },
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "drivers": ["puppeteer"]
+            }
+          }
+        },
+        "drivers": ["chrome"]
+      }
+    },
+    "noParamsDrivers": {
+      "defaults": {
+        "drivers": ["enzyme"],
+        "tags": [
+          [
+            "salesforce",
+            {
+              "drivers": ["firefox"]
+            }
+          ]
+        ]
+      },
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "drivers": ["puppeteer"]
+            }
+          }
+        }
+      }
+    },
+    "noDefaultParamsDrivers": {
+      "defaults": {
+        "tags": [
+          [
+            "salesforce",
+            {
+              "drivers": ["firefox"]
+            }
+          ]
+        ]
+      },
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "drivers": ["puppeteer"]
+            }
+          }
+        }
+      }
+    },
+    "noDefaultTagsNorParamsDrivers": {
+      "defaults": {
+        "drivers": ["enzyme"]
+      },
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "drivers": ["puppeteer"]
+            }
+          }
+        }
+      }
+    },
+    "noDefault": {
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "drivers": ["puppeteer"]
+            }
+          }
+        },
+        "drivers": ["chrome"]
+      }
+    },
+    "paramsProjects": {
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "drivers": ["puppeteer"]
+            }
+          }
+        }
+      }
+    },
+    "paramsDrivers": {
+      "params": {
+        "projects": {
+          "salesforce": {
+            "params": {
+              "brands": ["rc", "bt"]
+            }
+          }
+        },
+        "drivers": ["chrome"]
+      }
+    }
+  },
+  "expectDriver": {
+    "fullConfig": "firefox",
+    "noDefaultDriver": "firefox",
+    "noDefaultTags": "enzyme", 
+    "noParamsDrivers": "firefox",
+    "noDefaultParamsDrivers": "firefox",
+    "noDefaultTagsNorParamsDrivers": "enzyme",
+    "noDefault": "puppeteer",
+    "paramsProjects": "puppeteer",
+    "paramsDrivers": "chrome"
+  },
+  "invalid": {
+    "empty": {
+    },
+    "noParamsProject": {
+      "defaults": {
+        "drivers": ["enzyme"],
+        "tags": [
+          [
+            "salesforce",
+            {
+              "drivers": ["firefox"]
+            }
+          ]
+        ]
+      },
+      "params": {
+        "drivers": ["chrome"]
+      }
+    },
+    "defaultParamsDrivers": {
+      "defaults": {
+        "drivers": ["enzyme"]
+      },
+      "params": {
+        "drivers": ["chrome"]
+      }
+    },
+    "noDefaultDriversNorParamsProject": {
+      "defaults": {
+        "tags": [
+          [
+            "salesforce",
+            {
+              "drivers": ["firefox"]
+            }
+          ]
+        ]
+      },
+      "params": {
+        "drivers": ["chrome"]
+      }
+    },
+    "noParams": {
+      "defaults": {
+        "drivers": ["enzyme"],
+        "tags": [
+          [
+            "salesforce",
+            {
+              "drivers": ["firefox"]
+            }
+          ]
+        ]
+      }
+    },
+    "defaultsTags": {
+      "defaults": {
+        "tags": [
+          [
+            "salesforce",
+            {
+              "drivers": ["firefox"]
+            }
+          ]
+        ]
+      }
+    },
+    "defaultsDrivers": {
+      "defaults": {
+        "drivers": ["enzyme"]
+      }
+    }
+  }
+}
