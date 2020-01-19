@@ -198,9 +198,12 @@ function testCase(caseParams, fn, isOnly = false) {
   const caseTags = getCaseTags({ caseParams, params });
   const tags = getTags({ rawTags, defaultTestConfig, caseTags });
   const testCaseTags = mergeTags(tags, defaultTestConfig);
-  const execTags = mergeTags(global.execTags, testCaseTags).map(([_project, _tags]) => (
-    [_project, { ..._tags, drivers: [...global.execDrivers] }]
-  ));
+  const execTags = mergeTags(global.execTags, testCaseTags).map(([_project, _tags]) => {
+    if (caseTags.envs) {
+      _tags.envs = caseTags.envs
+    }
+    return [_project, { ..._tags, drivers: [...global.execDrivers] }]
+  });
 
   const _modes = [...modes, ...global.execModes];
   const isHeadless = _modes.indexOf('headless') > -1;
