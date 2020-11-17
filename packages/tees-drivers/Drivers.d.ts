@@ -9,6 +9,7 @@ interface $ {
     html(selector: string): string
     url(): sting
     click(selector: string, options?: Object): string
+    hover(selector: string, options?: Object): string
     type(selector: string, value: string, options?: Object): string
     waitForSelector(selector: string, options?: Object): Promise<?ElementHandle>
     waitForFrames(frameSelectors: string): Frame

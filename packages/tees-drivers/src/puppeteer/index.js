@@ -86,6 +86,12 @@ class Query extends BaseQuery {
     await this._node.click(_selector, options);
   }
 
+  async hover(selector, options = {}) {
+    await this.waitForSelector(selector, options);
+    const _selector = this.getSelector(selector);
+    await this._node.hover(_selector);
+  }
+
   async type(selector, value, options = {}) {
     const _selector = this.getSelector(selector, options);
     await this._node.type(_selector, value, options);
